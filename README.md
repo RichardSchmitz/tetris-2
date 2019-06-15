@@ -17,6 +17,9 @@ $ open dist/index.html
 
 ## Next steps
 
-1. Go through [Webpack guides](https://webpack.js.org/guides/getting-started/) to get familiar with the build system. Completed Getting Started.
+1. Go through [Webpack guides](https://webpack.js.org/guides/getting-started/) to get familiar with the build system. Completed:
+  * Getting Started
+  * Asset Management (skipped through it)
+  * Output Management
 2. Install Konva and figure out how to make a basic cavnas for the game and pieces
 3. Design classes and logic structure for game (using ES6 classes and Babel transpiling)
