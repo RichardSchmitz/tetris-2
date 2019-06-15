@@ -11,8 +11,7 @@ The plan here is to rewrite my original Avenge Tetris using modern JS standards.
 
 ```
 $ npm install # after a fresh clone only
-$ npm run build
-$ open dist/index.html
+$ npm start # starts the dev server on localhost:8080 for automatic compilation and reloading
 ```
 
 ## Next steps
@@ -21,5 +20,7 @@ $ open dist/index.html
   * Getting Started
   * Asset Management (skipped through it)
   * Output Management
+  * Development
+  * **Next up: Hot Module Replacement**
 2. Install Konva and figure out how to make a basic cavnas for the game and pieces
 3. Design classes and logic structure for game (using ES6 classes and Babel transpiling)
