@@ -25,5 +25,5 @@ $ npm run build # build production artifacts (optimized and without dev niceties
   * Hot Module Replacement (skimmed)
   * Code Splitting
   * Production
-2. Install Konva and figure out how to make a basic cavnas for the game and pieces
+2. ✅ Install Konva and figure out how to make a basic cavnas for the game and pieces
 3. Design classes and logic structure for game (using ES6 classes and Babel transpiling)

@@ -10,8 +10,16 @@ function component() {
   btn.onclick = printMe;
 
   element.appendChild(btn);
-  
+
+  return element;
+}
+
+function container() {
+  const element = document.createElement('div');
+  element.id = 'container';
+
   return element;
 }
 
 document.body.appendChild(component());
+document.body.appendChild(container());

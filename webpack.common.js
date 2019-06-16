@@ -5,7 +5,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
   entry: {
       app: './src/index.js',
-      print: './src/print.js'
+      print: './src/print.js',
+      konva: './src/konva-canvas.js'
   },
   plugins: [
     new CleanWebpackPlugin(),
