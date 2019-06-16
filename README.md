@@ -21,6 +21,7 @@ $ npm start # starts the dev server on localhost:8080 for automatic compilation 
   * Asset Management (skipped through it)
   * Output Management
   * Development
-  * **Next up: Hot Module Replacement**
+  * Hot Module Replacement (skimmed)
+  * Code Splitting
 2. Install Konva and figure out how to make a basic cavnas for the game and pieces
 3. Design classes and logic structure for game (using ES6 classes and Babel transpiling)
