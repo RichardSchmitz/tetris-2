@@ -4,13 +4,11 @@ body {
 	padding: 0px;
 }
 
-div.center {
-	margin: 10px auto 0px auto;
-	text-align: center;
-}
-
 div#container {
-	/*position: relative;*/
   margin: 10px auto 0px auto;
   width: 500px;
+}
+
+.konvajs-content {
+  background-color: #aaaaaa;
 }
