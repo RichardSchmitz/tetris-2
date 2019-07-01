@@ -1,7 +1,25 @@
 import Konva from 'konva';
 
+// Orientations:
+//   0:
+//     a b c
+//       d
+//   1:
+//       a
+//     d b
+//       c
+//   2:
+//      d
+//    c b a
+//   3:
+//      c
+//      b d
+//      a
 export default class T {
-  constructor(x, y, sideLength) {
+  constructor(sideLength) {
+    const x = 0;
+    const y = 0;
+
     this.a = new Konva.Rect({
       x: x,
       y: y,
@@ -70,6 +88,54 @@ export default class T {
     this.c.y(y);
     this.d.x(x + this.sideLength);
     this.d.y(y + this.sideLength);
+  }
+
+  minX() {
+    if (this.orientation == 0) {
+      return this.a.x();
+    } else if (this.orientation == 1) {
+      return this.d.x();
+    } else if (this.orientation == 2) {
+      return this.c.x();
+    } else {
+      return this.b.x();
+    }
+  }
+
+  maxX() {
+    if (this.orientation == 0) {
+      return this.c.x() + this.sideLength;
+    } else if (this.orientation == 1) {
+      return this.b.x() + this.sideLength;
+    } else if (this.orientation == 2) {
+      return this.a.x() + this.sideLength;
+    } else {
+      return this.d.x() + this.sideLength;
+    }
+  }
+
+  minY() {
+    if (this.orientation == 0) {
+      return this.b.y();
+    } else if (this.orientation == 1) {
+      return this.a.y();
+    } else if (this.orientation == 2) {
+      return this.d.y();
+    } else {
+      return this.c.y();
+    }
+  }
+
+  maxY() {
+    if (this.orientation == 0) {
+      return this.d.y() + this.sideLength;
+    } else if (this.orientation == 1) {
+      return this.c.y() + this.sideLength;
+    } else if (this.orientation == 2) {
+      return this.b.y() + this.sideLength;
+    } else {
+      return this.a.y() + this.sideLength;
+    }
   }
 
   rotateCw() {
