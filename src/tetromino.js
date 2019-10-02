@@ -1,14 +1,12 @@
 import Coord from './coord';
 
-export {createT};
+export {createT, _constructMatrix};
 
 class Tetromino {
   constructor(id, coords, type) {
     this.id = id;
     this.coords = coords;
     this.type = type;
-    const topLeft = findTopLeft(coords);
-    this.origin = new Coord(topLeft.x - 1, topLeft.y - 1);
   }
 
   translateDown() {
@@ -25,51 +23,93 @@ class Tetromino {
 
   translate(transform) {
     let coords = this.coords.map(transform);
-    return createBlock(this.id, coords, this.type);
+    return createBlock(this.id, coords, this.type, this.rotation);
   }
-}
-
-function findTopLeft(coords) {
-  let left = null;
-  let top = null;
-  for (let i = 0; i < coords.length; i++) {
-    const c = coords[i];
-    if (left === null || c.x < left) {
-      left = c.x;
-    }
-
-    if (top === null || c.y < top) {
-      top = c.y;
-    }
-  }
-
-  return new Coord(left, top);
 }
 
 function createT(id, center) {
   let coords = [center, center.left(), center.right(), center.down()];
 
-  return createBlock(id, coords, 'T');
+  return createBlock(id, coords, 'T', 0);
 }
 
-function createBlock(id, coords, type) {
+function createBlock(id, coords, type, rotation) {
   if (type === 'T') {
-    return new TBlock(id, coords);
+    return new TBlock(id, coords, rotation);
   }
 
   throw Exception(`No such type: ${type}`);
 }
 
+// 4 possible positions: 0 (regular T), 1 (cw rotation), 2 (upside-down), 3 (ccw rotation)
 class TBlock extends Tetromino {
-  constructor(id, coords) {
+  constructor(id, coords, rotation) {
     super(id, coords, 'T');
+    this.rotation = rotation % 4;
+  }
+
+  rotateCw() {
+    const xMin = this.coords.map(c => c.x).sort()[0];
+    const yMin = this.coords.map(c => c.y).sort()[0];
+
+    let origin = null;
+    let matrix = null;
+    if (this.rotation === 0) {
+      origin = new Coord(xMin, yMin - 1);
+      matrix = [[0, 1, 0], [1, 1, 1], [0, 0, 0]]; // matrix for position == 1
+    } else if (this.rotation === 1) {
+      origin = new Coord(xMin, yMin);
+      matrix = [[0, 1, 0], [1, 1, 0], [0, 1, 0]]; // matrix for position == 2
+    } else if (this.rotation === 2) {
+      origin = new Coord(xMin, yMin);
+      matrix = [[0, 0, 0], [1, 1, 1], [0, 1, 0]]; // matrix for position == 3
+    } else {
+      origin = new Coord(xMin - 1, yMin);
+      matrix = [[0, 1, 0], [0, 1, 1], [0, 1, 0]]; // matrix for position == 0
+    }
+
+    const coords = _deconstructMatrix(matrix, origin);
+
+    return createBlock(this.id, coords, this.type, this.rotation + 1);
+  }
+
+  rotateCcw() {
+    return this.rotateCw().rotateCw().rotateCw();
   }
 }
 
-function _getClassForType(type) {
-  if (type === 'T') {
-    return TBlock;
+// Matrices are indexed by x, then y, so the matrix is a list of columns
+// todo: is this function still required?
+function _constructMatrix(dimension, coords, origin) {
+  const matrix = [];
+  for (let i = 0; i < dimension; i++) {
+    matrix.push([]);
+    for (let j = 0; j < dimension; j++) {
+      matrix[i].push(0);
+    }
   }
 
-  throw Exception(`No such type: ${type}`);
+  for (const coord of coords) {
+    const x = coord.x - origin.x;
+    const y = coord.y - origin.y;
+    matrix[x][y] = 1;
+  }
+
+  return matrix;
+}
+
+// Given a matrix of 0's (representing nothing) and 1's (representing a coordinate),
+// and an origin point for the top left of the matrix, converts the matrix into
+// an array of Coords
+function _deconstructMatrix(matrix, origin) {
+  const coords = [];
+  for (let i = 0; i < matrix.length; i++) {
+    for (let j = 0; j < matrix[i].length; j++) {
+      if (matrix[i][j] === 1) {
+        coords.push(new Coord(i + origin.x, j + origin.y));
+      }
+    }
+  }
+
+  return coords;
 }
