@@ -1,13 +1,15 @@
-import GameBoard from './gameboard.js';
-import T from './tblock.js';
+import {TetrisEngine} from './engine';
+import GameBoard from './display.js';
 import './style.css';
 
+const engine = new TetrisEngine(10, 10);
 const gridSize = 50;
-const board = new GameBoard(gridSize, 10, 10, 'container');
-const t = new T(gridSize);
+const display = new GameBoard(gridSize, 'container');
+engine.addListener(display);
+engine.init();
 
-board.deployPiece(t);
+// board.deployPiece(t);
 
-document.addEventListener('keydown', e => board.handleKeypress(e));
+// document.addEventListener('keydown', e => board.handleKeypress(e));
 
-window.setInterval(() => board.handleTick(), 1000);
+// window.setInterval(() => board.handleTick(), 1000);

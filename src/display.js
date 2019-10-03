@@ -1,23 +1,31 @@
 import Konva from 'konva';
 
 export default class GameBoard {
-  constructor(gridSize, gridWidth, gridHeight, mountId) {
+  constructor(gridSize, mountId) {
     this.gridSize = gridSize;
-    this.gridWidth = gridWidth;
-    this.gridHeight = gridHeight;
+    this.mountId = mountId;
+    this.stage = null;
+    this.layerPieces = null;
+    this.activePiece = null;
+  }
 
+  notify(state) {
+    if (this.stage === null) {
+      this.initStage(state.debris.length, state.debris[0].length); // todo: possibly a better way to get grid dimensions
+    }
+
+    
+  }
+
+  initStage(width, height) {
     this.stage = new Konva.Stage({
-      container: mountId,
-      width: gridSize * gridWidth,
-      height: gridSize * gridHeight
+      container: this.mountId,
+      width: this.gridSize * width,
+      height: this.gridSize * height
     });
 
     this.layerPieces = new Konva.Layer();
-
     this.stage.add(this.layerPieces);
-
-    this.activePiece = null;
-
     this.layerPieces.draw();
   }
 

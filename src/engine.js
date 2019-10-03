@@ -1,21 +1,25 @@
 import {createT} from './tetromino';
 import {TetrisState} from './state';
+import Coord from './coord';
+
 
 export {TetrisEngine};
 
 class TetrisEngine {
-  constructor() {
+  constructor(gridWidth, gridHeight) {
     this._state = new TetrisState();
+    this._state.debris = createDebrisMatrix(gridWidth, gridHeight);
     this._listeners = [];
   }
 
-  init() {
-    this._state.active = createT('foo001', new Coord(5, 0));
-    // put at y=-100 to keep it off the current gameboard. Maybe there's a more elegant solution.
-    this._state.next = createT('foo002', new Coord(5, -100));
-    // Assuming dimensions are 10x10 for now
-    this._state.debris = createDebrisMatrix(10, 10);
+  addListener(listener) {
+    listener.notify(this._state);
+    this._listeners.push(listener);
+  }
 
+  init() {
+    // put at y=-100 to keep it off the current gameboard. Maybe there's a more elegant solution.
+    this._state.next = createT('foo001', new Coord(5, -100));
     this._notifyListeners();
   }
 
@@ -24,6 +28,15 @@ class TetrisEngine {
     const started = this._state.started;
     const gameOver = this._state.gameOver;
     if (!(paused || started || gameOver)) {
+      this._state.active = this._state.next;
+      this._state.next = createT('foo002', new Coord(5, -100));
+      for (let i = 0; i < 100; i++) {
+        // Not very elegant, but this moves the piece down to the top of the gameboard.
+        // It would be better if we could set the position directly, but what does that
+        // mean for different types of tetrominoes? todo
+        this._state.active.translateDown();
+      }
+
       this._state.started = true;
       this._notifyListeners();
       // todo: set timeout/scheduled function to move the game forward
@@ -45,7 +58,7 @@ class TetrisEngine {
   }
 
   _notifyListeners() {
-    for (const listeners of this._listeners) {
+    for (const listener of this._listeners) {
       // todo: possible concurrency issue (what happens if state is modified
       // while we're still notifying?). Maybe it doesn't matter because only
       // latest state is important. Also possibly notifying multiple times with
