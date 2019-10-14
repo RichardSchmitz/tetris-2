@@ -1,3 +1,10 @@
+const ENTER = 13;
+const LEFT = 37;
+const RIGHT = 39;
+const DOWN = 40;
+const ROTATE_CW = 190;
+const ROTATE_CCW = 188;
+
 export default class Keyboard {
   constructor(engine) {
     this.engine = engine;
@@ -31,10 +38,16 @@ export default class Keyboard {
 
       // this.layerPieces.batchDraw();
     // }
-    if (event.keyCode === 13) {
+    if (event.keyCode === ENTER) {
       // Temporary, for dev mode. Tick only when enter pressed.
       event.preventDefault();
       this.engine.handleMoveDown();
+    } else if (event.keyCode === LEFT) {
+      event.preventDefault();
+      this.engine.handleMoveLeft();
+    } else if (event.keyCode === RIGHT) {
+      event.preventDefault();
+      this.engine.handleMoveRight();
     }
   }
 }

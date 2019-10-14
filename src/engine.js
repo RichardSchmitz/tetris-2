@@ -66,14 +66,32 @@ class TetrisEngine {
     return !this._pastBottomBoundary(bottomCoord.down());
   }
 
+  handleMoveRight() {
+    if (this._canMoveRight(this._state.active)) {
+      this._state.active = this._state.active.translateRight();
+      this._notifyListeners();
+    }
+  }
+
   _canMoveRight(piece) {
-    const rightCoord = this._gridCoord(piece.maxX());
-    return !this._pastRightBoundary(rightCoord)
+    const rightCoord = piece.coords.slice()
+                                   .sort((c1, c2) => c1.x - c2.x) // Sort by ascending x value
+                                   .pop(); // Get the last one (largest x);
+    return !this._pastRightBoundary(rightCoord.right());
+  }
+
+  handleMoveLeft() {
+    if (this._canMoveLeft(this._state.active)) {
+      this._state.active = this._state.active.translateLeft();
+      this._notifyListeners();
+    }
   }
 
   _canMoveLeft(piece) {
-    const leftCoord = this._gridCoord(piece.minX());
-    return !this._pastLeftBoundary(leftCoord - 1);
+    const leftCoord = piece.coords.slice()
+                                 .sort((c1, c2) => c1.x - c2.x) // Sort by ascending x value
+                                 [0]; // First one (lowest x)
+    return !this._pastLeftBoundary(leftCoord.left());
   }
 
   _canRotateCw(piece) {
@@ -101,11 +119,11 @@ class TetrisEngine {
   }
 
   _pastRightBoundary(coord) {
-    return coord >= this.gridWidth;
+    return coord.x >= this._state.debris.length;
   }
 
   _pastLeftBoundary(coord) {
-    return coord < 0;
+    return coord.x < 0;
   }
 
   _notifyListeners() {
