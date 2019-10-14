@@ -7,6 +7,7 @@ const gridSize = 50;
 const display = new GameBoard(gridSize, 'container');
 engine.addListener(display);
 engine.init();
+engine.start();
 
 // board.deployPiece(t);
 

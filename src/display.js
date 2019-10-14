@@ -7,6 +7,7 @@ export default class GameBoard {
     this.stage = null;
     this.layerPieces = null;
     this.activePiece = null;
+    this.shapes = null;
   }
 
   notify(state) {
@@ -14,7 +15,23 @@ export default class GameBoard {
       this.initStage(state.debris.length, state.debris[0].length); // todo: possibly a better way to get grid dimensions
     }
 
-    
+    // update active piece shape
+    // todo: shouldn't be only when null
+    if (this.shapes === null && state.active !== null) {
+      this.shapes = state.active.coords.map(c => {
+        return new Konva.Rect({
+        x: c.x * this.gridSize,
+        y: c.y * this.gridSize,
+        width: this.gridSize,
+        height: this.gridSize,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4
+      })});
+
+      this.shapes.forEach(s => this.layerPieces.add(s));
+      this.layerPieces.draw();
+    }
   }
 
   initStage(width, height) {

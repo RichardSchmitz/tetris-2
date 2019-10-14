@@ -34,7 +34,7 @@ class TetrisEngine {
         // Not very elegant, but this moves the piece down to the top of the gameboard.
         // It would be better if we could set the position directly, but what does that
         // mean for different types of tetrominoes? todo
-        this._state.active.translateDown();
+        this._state.active = this._state.active.translateDown();
       }
 
       this._state.started = true;
