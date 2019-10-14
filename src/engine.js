@@ -53,8 +53,59 @@ class TetrisEngine {
     // todo...
 
     // Step 2: Active piece is not stuck, so it can move down. Translate the piece down.
-    this._state.active.translateDown();
-    this._notifyListeners();
+    if (this._canMoveDown(this._state.active)) {
+      this._state.active = this._state.active.translateDown();
+      this._notifyListeners();
+    }
+  }
+
+  _canMoveDown(piece) {
+    const bottomCoord = piece.coords.slice() // Create a shallow copy of the array
+                                    .sort((c1, c2) => c1.y - c2.y) // Sort by ascending y value
+                                    .pop(); // Get the last one (this modifies the array, which is why we created a copy)
+    return !this._pastBottomBoundary(bottomCoord.down());
+  }
+
+  _canMoveRight(piece) {
+    const rightCoord = this._gridCoord(piece.maxX());
+    return !this._pastRightBoundary(rightCoord)
+  }
+
+  _canMoveLeft(piece) {
+    const leftCoord = this._gridCoord(piece.minX());
+    return !this._pastLeftBoundary(leftCoord - 1);
+  }
+
+  _canRotateCw(piece) {
+    piece.rotateCw();
+    const bottomCoord = this._gridCoord(piece.maxY()) - 1; // maxY() corresponds to the maximum pixel coordinate Y value, which is actually 1 grid space farther than the maximum grid coordinate, so we subtract 1
+    const rightCoord = this._gridCoord(piece.maxX()) - 1; // similarly with maxX()
+    const leftCoord = this._gridCoord(piece.minX());
+    piece.rotateCcw();
+
+    return !(this._pastBottomBoundary(bottomCoord) || this._pastRightBoundary(rightCoord) || this._pastLeftBoundary(leftCoord));
+  }
+
+  _canRotateCcw(piece) {
+    piece.rotateCcw();
+    const bottomCoord = this._gridCoord(piece.maxY()) - 1;
+    const rightCoord = this._gridCoord(piece.maxX()) - 1;
+    const leftCoord = this._gridCoord(piece.minX());
+    piece.rotateCw();
+
+    return !(this._pastBottomBoundary(bottomCoord) || this._pastRightBoundary(rightCoord) || this._pastLeftBoundary(leftCoord));
+  }
+
+  _pastBottomBoundary(coord) {
+    return coord.y >= this._state.debris[0].length;
+  }
+
+  _pastRightBoundary(coord) {
+    return coord >= this.gridWidth;
+  }
+
+  _pastLeftBoundary(coord) {
+    return coord < 0;
   }
 
   _notifyListeners() {
