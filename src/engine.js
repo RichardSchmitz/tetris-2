@@ -1,4 +1,4 @@
-import {createT} from './tetromino';
+import {createT, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
 import {TetrisState} from './state';
 import Coord from './coord';
 
@@ -30,16 +30,20 @@ class TetrisEngine {
     if (!(paused || started || gameOver)) {
       this._state.active = this._state.next;
       this._state.next = createT('foo002', new Coord(5, -100));
-      for (let i = 0; i < 100; i++) {
-        // Not very elegant, but this moves the piece down to the top of the gameboard.
-        // It would be better if we could set the position directly, but what does that
-        // mean for different types of tetrominoes? todo
-        this._state.active = this._state.active.translateDown();
-      }
+      this._moveActiveOntoBoard();
 
       this._state.started = true;
       this._notifyListeners();
       // todo: set timeout/scheduled function to move the game forward
+    }
+  }
+
+  _moveActiveOntoBoard() {
+    for (let i = 0; i < 100; i++) {
+      // Not very elegant, but this moves the piece down to the top of the gameboard.
+      // It would be better if we could set the position directly, but what does that
+      // mean for different types of tetrominoes? todo
+      this._state.active = this._state.active.translateDown();
     }
   }
 
@@ -55,15 +59,25 @@ class TetrisEngine {
     // Step 2: Active piece is not stuck, so it can move down. Translate the piece down.
     if (this._canMoveDown(this._state.active)) {
       this._state.active = this._state.active.translateDown();
+      if (!this._canMoveDown(this._state.active)) {
+        // todo: check if we're at the bottom and set up next piece
+        // Need to keep active behind in debris or something...
+        this._state.stack.push(this._state.active);
+
+        this._state.active = this._state.next;
+        this._moveActiveOntoBoard();
+
+        const id = Math.random().toString().substring(2, 7);
+        this._state.next = createT(id, new Coord(5, -100));
+      }
       this._notifyListeners();
+    } else {
+      // todo: game over
     }
   }
 
   _canMoveDown(piece) {
-    const bottomCoord = piece.coords.slice() // Create a shallow copy of the array
-                                    .sort((c1, c2) => c1.y - c2.y) // Sort by ascending y value
-                                    .pop(); // Get the last one (this modifies the array, which is why we created a copy)
-    return !this._pastBottomBoundary(bottomCoord.down());
+    return !this._pastBottomBoundary(bottommostCoord(piece).down());
   }
 
   handleMoveRight() {
@@ -74,10 +88,7 @@ class TetrisEngine {
   }
 
   _canMoveRight(piece) {
-    const rightCoord = piece.coords.slice()
-                                   .sort((c1, c2) => c1.x - c2.x) // Sort by ascending x value
-                                   .pop(); // Get the last one (largest x);
-    return !this._pastRightBoundary(rightCoord.right());
+    return !this._pastRightBoundary(rightmostCoord(piece).right());
   }
 
   handleMoveLeft() {
@@ -88,14 +99,30 @@ class TetrisEngine {
   }
 
   _canMoveLeft(piece) {
-    const leftCoord = piece.coords.slice()
-                                 .sort((c1, c2) => c1.x - c2.x) // Sort by ascending x value
-                                 [0]; // First one (lowest x)
-    return !this._pastLeftBoundary(leftCoord.left());
+    return !this._pastLeftBoundary(leftmostCoord(piece).left());
+  }
+
+  handleRotateCw() {
+    if (this._canRotateCw(this._state.active)) {
+      this._state.active = this._state.active.rotateCw();
+    }
   }
 
   _canRotateCw(piece) {
-    piece.rotateCw();
+      // a piece should be able to rotate even when its path would pass through existing debris
+      // eg. this transition for S is legal:
+      //
+      //                       S
+      //                       S
+      // S S S S S             S
+      // X X O X X         X X S X X
+      // X X O X X    =>   X X S X X
+      //
+      // I tried this on https://tetris.com/play-tetris and rotating through
+      // other pieces appears to work
+
+      // todo: implement wall-kicks as described here: https://strategywiki.org/wiki/Tetris/Rotation_systems#Wall_kicks
+    const rotated = piece.rotateCw();
     const bottomCoord = this._gridCoord(piece.maxY()) - 1; // maxY() corresponds to the maximum pixel coordinate Y value, which is actually 1 grid space farther than the maximum grid coordinate, so we subtract 1
     const rightCoord = this._gridCoord(piece.maxX()) - 1; // similarly with maxX()
     const leftCoord = this._gridCoord(piece.minX());

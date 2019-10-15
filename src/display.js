@@ -20,20 +20,33 @@ export default class GameBoard {
       // todo: nuke and pave every tick is probably very inefficient. Should do a diff
       // or move shapes or something
       this.shapes.forEach(s => s.destroy());
-      this.shapes = state.active.coords.map(c => {
-        return new Konva.Rect({
-        x: c.x * this.gridSize,
-        y: c.y * this.gridSize,
-        width: this.gridSize,
-        height: this.gridSize,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4
-      })});
+
+      // Active piece
+      this.shapes = [];
+      const active = this.createPolys(state.active);
+      this.shapes = this.shapes.concat(active);
+      // Stack pieces
+      for (let piece of state.stack) {
+        const stack = this.createPolys(piece);
+        this.shapes = this.shapes.concat(stack);
+      }
 
       this.shapes.forEach(s => this.layerPieces.add(s));
       this.layerPieces.draw();
     }
+  }
+
+  createPolys(piece) {
+    return piece.coords.map(c => {
+      return new Konva.Rect({
+      x: c.x * this.gridSize,
+      y: c.y * this.gridSize,
+      width: this.gridSize,
+      height: this.gridSize,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4
+    })});
   }
 
   initStage(width, height) {

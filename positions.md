@@ -1,3 +1,5 @@
+See also https://strategywiki.org/wiki/Tetris/Rotation_systems
+
 # T
 
 O O O    O X O    O X O    O X O

@@ -42,6 +42,9 @@ export default class Keyboard {
       // Temporary, for dev mode. Tick only when enter pressed.
       event.preventDefault();
       this.engine.handleMoveDown();
+    } else if (event.keyCode === DOWN) {
+      event.preventDefault();
+      this.engine.handleMoveDown();
     } else if (event.keyCode === LEFT) {
       event.preventDefault();
       this.engine.handleMoveLeft();

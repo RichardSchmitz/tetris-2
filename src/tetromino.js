@@ -1,6 +1,6 @@
 import Coord from './coord';
 
-export {createT, _constructMatrix};
+export {createT, _constructMatrix, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord};
 
 class Tetromino {
   constructor(id, coords, type) {
@@ -112,4 +112,30 @@ function _deconstructMatrix(matrix, origin) {
   }
 
   return coords;
+}
+
+function leftmostCoord(piece) {
+  // Sort by descending x value
+  return _getLastCoord(piece.coords, (c1, c2) => c2.x - c1.x);
+}
+
+function rightmostCoord(piece) {
+  // Sort by ascending x value
+  return _getLastCoord(piece.coords, (c1, c2) => c1.x - c2.x);
+}
+
+function topmostCoord(piece) {
+  // Sort by ascending y value
+  return _getLastCoord(piece.coords, (c1, c2) => c2.y - c1.y);
+}
+
+function bottommostCoord(piece) {
+  // Sort by ascending y value
+  return _getLastCoord(piece.coords, (c1, c2) => c1.y - c2.y);
+}
+
+function _getLastCoord(coords, arrangement) {
+  return coords.slice() // Create a shallow copy of the array
+               .sort(arrangement)
+               .pop(); // Get the last one (this modifies the array, which is why we created a copy)
 }
