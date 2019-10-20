@@ -47,7 +47,7 @@ class TetrisEngine {
     }
   }
 
-  handleMoveDown() {
+  handleTick() {
     // Step 1: check if the active piece is stuck. Stuck means it has no room underneath it to move down.
     //         If so, do not handle the move, and instead handle transition to a new piece.
     //         That means 1. check for a completed row. If necessary, remove the row, move everything down,
@@ -58,21 +58,26 @@ class TetrisEngine {
 
     // Step 2: Active piece is not stuck, so it can move down. Translate the piece down.
     if (this._canMoveDown(this._state.active)) {
-      this._state.active = this._state.active.translateDown();
-      if (!this._canMoveDown(this._state.active)) {
-        // todo: check if we're at the bottom and set up next piece
-        // Need to keep active behind in debris or something...
-        this._state.stack.push(this._state.active);
-
-        this._state.active = this._state.next;
-        this._moveActiveOntoBoard();
-
-        const id = Math.random().toString().substring(2, 7);
-        this._state.next = createT(id, new Coord(5, -100));
-      }
-      this._notifyListeners();
+      this.handleMoveDown();
     } else {
+      // todo: check if we're at the bottom and set up next piece
+      // Need to keep active behind in debris or something...
+      this._state.stack.push(this._state.active);
+
+      this._state.active = this._state.next;
+      this._moveActiveOntoBoard();
+
+      const id = Math.random().toString().substring(2, 7);
+      this._state.next = createT(id, new Coord(5, -100));
       // todo: game over
+      this._notifyListeners();
+    }
+  }
+
+  handleMoveDown() {
+    if (this._canMoveDown(this._state.active)) {
+      this._state.active = this._state.active.translateDown();
+      this._notifyListeners();
     }
   }
 
