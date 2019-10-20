@@ -77,7 +77,9 @@ class TetrisEngine {
   }
 
   _canMoveDown(piece) {
-    return !this._pastBottomBoundary(bottommostCoord(piece).down());
+    const translated = piece.translateDown();
+    return !(this._pastBottomBoundary(bottommostCoord(translated))
+              || this._collidesWithStack(translated));
   }
 
   handleMoveRight() {
@@ -88,7 +90,9 @@ class TetrisEngine {
   }
 
   _canMoveRight(piece) {
-    return !this._pastRightBoundary(rightmostCoord(piece).right());
+    const translated = piece.translateRight();
+    return !(this._pastRightBoundary(rightmostCoord(translated))
+              || this._collidesWithStack(translated));
   }
 
   handleMoveLeft() {
@@ -99,7 +103,9 @@ class TetrisEngine {
   }
 
   _canMoveLeft(piece) {
-    return !this._pastLeftBoundary(leftmostCoord(piece).left());
+    const translated = piece.translateLeft();
+    return !(this._pastLeftBoundary(leftmostCoord(translated))
+              || this._collidesWithStack(translated));
   }
 
   handleRotateCw() {
@@ -151,6 +157,20 @@ class TetrisEngine {
 
   _pastLeftBoundary(coord) {
     return coord.x < 0;
+  }
+
+  _collidesWithStack(piece) {
+    for (const coord of piece.coords) {
+      for (const stackPiece of this._state.stack) {
+        for (const stackCoord of stackPiece.coords) {
+          if (coord.x === stackCoord.x && coord.y === stackCoord.y) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   }
 
   _notifyListeners() {
