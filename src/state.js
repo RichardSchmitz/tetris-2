@@ -16,4 +16,12 @@ class TetrisState {
     this.bonus = 0;
     this.score = 0;
   }
+
+  width() {
+    return this.debris.length;
+  }
+
+  height() {
+    return this.debris[0].length;
+  }
 }

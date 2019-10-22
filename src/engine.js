@@ -1,6 +1,7 @@
 import {createT, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
 import {TetrisState} from './state';
 import Coord from './coord';
+import * as matrixUtil from './matrix';
 
 
 export {TetrisEngine};
@@ -8,7 +9,7 @@ export {TetrisEngine};
 class TetrisEngine {
   constructor(gridWidth, gridHeight) {
     this._state = new TetrisState();
-    this._state.debris = createDebrisMatrix(gridWidth, gridHeight);
+    this._state.debris = matrixUtil.createMatrix(gridWidth, gridHeight);
     this._listeners = [];
   }
 
@@ -60,18 +61,74 @@ class TetrisEngine {
     if (this._canMoveDown(this._state.active)) {
       this.handleMoveDown();
     } else {
-      // todo: check if we're at the bottom and set up next piece
-      // Need to keep active behind in debris or something...
       this._state.stack.push(this._state.active);
 
+      // handle row completion
+      this._handleRowCompletion();
+
+      // set up next piece
       this._state.active = this._state.next;
       this._moveActiveOntoBoard();
-
       const id = Math.random().toString().substring(2, 7);
       this._state.next = createT(id, new Coord(5, -100));
-      // todo: game over
+      // todo: handle game over
       this._notifyListeners();
     }
+  }
+
+  _handleRowCompletion() {
+    // First construct matrix where each cell contains either null or a reference
+    // to a piece in the stack
+    const matrix = matrixUtil.createMatrix(this._state.width(), this._state.height());
+    matrixUtil.fillMatrix(matrix, this._state.stack);
+    // Determine which rows (if any) are complete.
+    const completeRows = [];
+    for (let j = 0; j < this._state.height(); j++) {
+      if (rowIsFilled(matrix, j)) {
+        completeRows.push(j);
+      }
+    }
+    if (completeRows.length === 0) {
+      return;
+    }
+    // Clear those rows
+    for (const j of completeRows) {
+      for (let i = 0; i < this._state.width(); i++) {
+        const piece = matrix[i][j];
+        matrix[i][j] = null;
+        piece.coords = piece.coords.filter(c => !(c.x === i && c.y === j));
+      }
+    }
+    // Move higher rows down by the cumulative number of rows cleared.
+    // Go through each row (bottom to top). Move each piece down. The number
+    // of spaces to move down is equal to the number of completed rows greater
+    // than the current row. eg. completedRows = [5, 7, 8]. Then row 4 will
+    // move down 3 spaces, row 6 will move down 2 spaces, and row 9 will move
+    // down 0 spaces. Skip completed rows since they don't need to move down.
+    const rowSet = new Set(completeRows);
+    for (let j = this._state.height() - 2; j >= 0 ; j--) {
+      // j goes to from this._state.height() - 2 since row this._state.height() - 1
+      // (the bottom row) can never move down
+      if (rowSet.has(j)) {
+        // This row is cleared, so nothing needs to be moved down
+        continue;
+      }
+      const spaces = completeRows.filter(r => r > j).length;
+      if (spaces === 0) {
+        // There are no more rows to move down
+        break;
+      }
+      for (let i = 0; i < this._state.width(); i++) {
+        const piece = matrix[i][j];
+        if (piece !== null) {
+          // Remove the coordinate at (i, j)
+          piece.coords = piece.coords.filter(c => !(c.x === i && c.y === j));
+          // Add a coord `spaces` row lower
+          piece.coords.push(new Coord(i, j + spaces));
+        }
+      }
+    }
+    // todo: update score
   }
 
   handleMoveDown() {
@@ -189,15 +246,13 @@ class TetrisEngine {
   }
 }
 
-// Creates a matrix of the given dimensions. Every cell contains null.
-function createDebrisMatrix(width, height) {
-  const matrix = [];
-  for (let i = 0; i < width; i++) {
-    matrix.push([]);
-    for (let j = 0; j < height; j++) {
-      matrix[i].push(null);
+// Returns true iff row y of the matrix consists of all non-null values
+function rowIsFilled(matrix, y) {
+  for (let i = 0; i < matrix.length; i++) {
+    if (matrix[i][y] === null) {
+      return false;
     }
   }
 
-  return matrix;
+  return true;
 }

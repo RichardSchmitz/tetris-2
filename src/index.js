@@ -3,7 +3,7 @@ import GameBoard from './display.js';
 import Keyboard from './controls';
 import './style.css';
 
-const engine = new TetrisEngine(10, 10);
+const engine = new TetrisEngine(9, 10);
 const controls = new Keyboard(engine);
 const gridSize = 50;
 const display = new GameBoard(gridSize, 'container');
