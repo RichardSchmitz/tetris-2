@@ -174,10 +174,15 @@ class TetrisEngine {
     if (this._canRotateCw(this._state.active)) {
       this._state.active = this._state.active.rotateCw();
       this._notifyListeners();
+    } else if (this._canRotateCw(this._state.active.translateRight())) {
+      this._state.active = this._state.active.translateRight().rotateCw();
+      this._notifyListeners();
+    } else if (this._canRotateCcw(this._state.active.translateLeft())) {
+      this._state.active = this._state.active.translateLeft().rotateCw();
+      this._notifyListeners();
     }
   }
 
-// todo: this is returning false when it should return true?
   _canRotateCw(piece) {
       // a piece should be able to rotate even when its path would pass through existing debris
       // eg. this transition for S is legal:
@@ -191,7 +196,6 @@ class TetrisEngine {
       // I tried this on https://tetris.com/play-tetris and rotating through
       // other pieces appears to work
 
-      // todo: implement wall-kicks as described here: https://strategywiki.org/wiki/Tetris/Rotation_systems#Wall_kicks
     const rotated = piece.rotateCw();
 
     return !this._illegalPosition(rotated);
@@ -200,6 +204,12 @@ class TetrisEngine {
   handleRotateCcw() {
     if (this._canRotateCcw(this._state.active)) {
       this._state.active = this._state.active.rotateCcw();
+      this._notifyListeners();
+    } else if (this._canRotateCcw(this._state.active.translateRight())) {
+      this._state.active = this._state.active.translateRight().rotateCcw();
+      this._notifyListeners();
+    } else if (this._canRotateCcw(this._state.active.translateLeft())) {
+      this._state.active = this._state.active.translateLeft().rotateCcw();
       this._notifyListeners();
     }
   }
