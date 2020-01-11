@@ -28,7 +28,8 @@ class Tetromino {
 }
 
 function createT(id, center) {
-  let coords = [center, center.left(), center.right(), center.down()];
+  center = center.down();
+  let coords = [center, center.left(), center.right(), center.up()];
 
   return createBlock(id, coords, 'T', 0);
 }
@@ -54,18 +55,18 @@ class TBlock extends Tetromino {
 
     let origin = null;
     let matrix = null;
-    if (this.rotation === 0) {
+    if (this.rotation === 2) {
       origin = new Coord(xMin, yMin - 1);
-      matrix = [[0, 1, 0], [1, 1, 1], [0, 0, 0]]; // matrix for position == 1
-    } else if (this.rotation === 1) {
+      matrix = [[0, 1, 0], [1, 1, 1], [0, 0, 0]]; // matrix for position == 3
+    } else if (this.rotation === 3) {
       origin = new Coord(xMin, yMin);
-      matrix = [[0, 1, 0], [1, 1, 0], [0, 1, 0]]; // matrix for position == 2
-    } else if (this.rotation === 2) {
+      matrix = [[0, 1, 0], [1, 1, 0], [0, 1, 0]]; // matrix for position == 0
+    } else if (this.rotation === 0) {
       origin = new Coord(xMin, yMin);
-      matrix = [[0, 0, 0], [1, 1, 1], [0, 1, 0]]; // matrix for position == 3
+      matrix = [[0, 0, 0], [1, 1, 1], [0, 1, 0]]; // matrix for position == 1
     } else {
       origin = new Coord(xMin - 1, yMin);
-      matrix = [[0, 1, 0], [0, 1, 1], [0, 1, 0]]; // matrix for position == 0
+      matrix = [[0, 1, 0], [0, 1, 1], [0, 1, 0]]; // matrix for position == 2
     }
 
     const coords = _deconstructMatrix(matrix, origin);
