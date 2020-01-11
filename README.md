@@ -29,3 +29,4 @@ $ npm run build # build production artifacts (optimized and without dev niceties
 3. ✅ Design classes and logic structure for game (using ES6 classes and Babel transpiling)
   * Figure out how to make custom shapes for pieces
   * Figure out how to rotate pieces
+``

@@ -1,9 +1,12 @@
 const ENTER = 13;
-const LEFT = 37;
-const RIGHT = 39;
-const DOWN = 40;
-const ROTATE_CW = 190;
-const ROTATE_CCW = 188;
+const LEFT = 65; // a
+const RIGHT = 68; // d
+const DOWN = 83; // s
+//const LEFT = 37; // left arrow
+//const RIGHT = 39; // right arrow
+//const DOWN = 40; // down arrow
+const ROTATE_CW = 39; // right arrow
+const ROTATE_CCW = 37; // left arrow
 
 export default class Keyboard {
   constructor(engine) {
@@ -51,6 +54,10 @@ export default class Keyboard {
     } else if (event.keyCode === RIGHT) {
       event.preventDefault();
       this.engine.handleMoveRight();
+    } else if (event.keyCode === ROTATE_CW) {
+      this.engine.handleRotateCw();
+    } else if (event.keyCode === ROTATE_CCW) {
+      this.engine.handleRotateCcw();
     }
   }
 }

@@ -173,9 +173,11 @@ class TetrisEngine {
   handleRotateCw() {
     if (this._canRotateCw(this._state.active)) {
       this._state.active = this._state.active.rotateCw();
+      this._notifyListeners();
     }
   }
 
+// todo: this is returning false when it should return true?
   _canRotateCw(piece) {
       // a piece should be able to rotate even when its path would pass through existing debris
       // eg. this transition for S is legal:
@@ -191,22 +193,33 @@ class TetrisEngine {
 
       // todo: implement wall-kicks as described here: https://strategywiki.org/wiki/Tetris/Rotation_systems#Wall_kicks
     const rotated = piece.rotateCw();
-    const bottomCoord = this._gridCoord(piece.maxY()) - 1; // maxY() corresponds to the maximum pixel coordinate Y value, which is actually 1 grid space farther than the maximum grid coordinate, so we subtract 1
-    const rightCoord = this._gridCoord(piece.maxX()) - 1; // similarly with maxX()
-    const leftCoord = this._gridCoord(piece.minX());
-    piece.rotateCcw();
 
-    return !(this._pastBottomBoundary(bottomCoord) || this._pastRightBoundary(rightCoord) || this._pastLeftBoundary(leftCoord));
+    return !this._illegalPosition(rotated);
+  }
+
+  handleRotateCcw() {
+    if (this._canRotateCcw(this._state.active)) {
+      this._state.active = this._state.active.rotateCcw();
+      this._notifyListeners();
+    }
+  }
+
+  _illegalPosition(piece) {
+    return (this._pastTopBoundary(topmostCoord(piece)) ||
+      this._pastBottomBoundary(bottommostCoord(piece)) ||
+      this._pastRightBoundary(rightmostCoord(piece)) ||
+      this._pastLeftBoundary(leftmostCoord(piece)) ||
+      this._collidesWithStack(piece));
   }
 
   _canRotateCcw(piece) {
-    piece.rotateCcw();
-    const bottomCoord = this._gridCoord(piece.maxY()) - 1;
-    const rightCoord = this._gridCoord(piece.maxX()) - 1;
-    const leftCoord = this._gridCoord(piece.minX());
-    piece.rotateCw();
+    const rotated = piece.rotateCcw();
 
-    return !(this._pastBottomBoundary(bottomCoord) || this._pastRightBoundary(rightCoord) || this._pastLeftBoundary(leftCoord));
+    return !this._illegalPosition(rotated);
+  }
+
+  _pastTopBoundary(coord) {
+    return coord.y < 0;
   }
 
   _pastBottomBoundary(coord) {
