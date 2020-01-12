@@ -2,7 +2,7 @@ import {createT, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} f
 import {TetrisState} from './state';
 import Coord from './coord';
 import * as matrixUtil from './matrix';
-
+import randomstring from 'randomstring';
 
 export {TetrisEngine};
 
@@ -18,9 +18,13 @@ class TetrisEngine {
     this._listeners.push(listener);
   }
 
+  _newId() {
+    return randomstring.generate(8);
+  }
+
   init() {
     // put at y=-100 to keep it off the current gameboard. Maybe there's a more elegant solution.
-    this._state.next = createT('foo001', new Coord(5, -100));
+    this._state.next = createT(this._newId(), new Coord(5, -100));
     this._notifyListeners();
   }
 
@@ -30,7 +34,7 @@ class TetrisEngine {
     const gameOver = this._state.gameOver;
     if (!(paused || started || gameOver)) {
       this._state.active = this._state.next;
-      this._state.next = createT('foo002', new Coord(5, -100));
+      this._state.next = createT(this._newId(), new Coord(5, -100));
       this._moveActiveOntoBoard();
 
       this._state.started = true;
