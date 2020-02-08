@@ -4,9 +4,33 @@ body {
 	padding: 0px;
 }
 
-div#container {
-  margin: 10px auto 0px auto;
+#container {
+  text-align: center;
+  margin: 5px 0px;
+}
+
+#gameboard {
+  /*margin: 10px auto 0px auto;*/
   width: 500px;
+  display: inline-block;
+}
+
+#sidebar-outer {
+  position: relative;
+  width: 0px;
+  height: 0px;
+  vertical-align: top;
+  display: inline-block;
+}
+
+#sidebar-inner {
+padding: 5px;
+  background: #fff;
+  display: inline-block;
+  position: absolute;
+  width: 180px;
+  height: 490px;
+  text-align: left;
 }
 
 .konvajs-content {
