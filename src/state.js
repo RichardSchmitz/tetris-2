@@ -17,6 +17,7 @@ class TetrisState {
     this.score = 0;
   }
 
+  // todo: possibly a better way to get grid dimensions
   width() {
     return this.debris.length;
   }

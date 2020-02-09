@@ -27,8 +27,8 @@ class Tetromino {
   }
 }
 
-function createT(id, center) {
-  center = center.down();
+function createT(id) {
+  const center = new Coord(1, 1);
   let coords = [center, center.left(), center.right(), center.up()];
 
   return createBlock(id, coords, 'T', 0);

@@ -23,8 +23,8 @@ class TetrisEngine {
   }
 
   init() {
-    // put at y=-100 to keep it off the current gameboard. Maybe there's a more elegant solution.
-    this._state.next = createT(this._newId(), new Coord(5, -100));
+    // put at y=0 to keep it off the current gameboard. Maybe there's a more elegant solution.
+    this._state.next = createT(this._newId());
     this._notifyListeners();
   }
 
@@ -34,7 +34,7 @@ class TetrisEngine {
     const gameOver = this._state.gameOver;
     if (!(paused || started || gameOver)) {
       this._state.active = this._state.next;
-      this._state.next = createT(this._newId(), new Coord(5, -100));
+      this._state.next = createT(this._newId());
       this._moveActiveOntoBoard();
 
       this._state.started = true;
@@ -44,12 +44,7 @@ class TetrisEngine {
   }
 
   _moveActiveOntoBoard() {
-    for (let i = 0; i < 100; i++) {
-      // Not very elegant, but this moves the piece down to the top of the gameboard.
-      // It would be better if we could set the position directly, but what does that
-      // mean for different types of tetrominoes? todo
-      this._state.active = this._state.active.translateDown();
-    }
+    this._state.active = moveToCenter(this._state.active, this._state);
   }
 
   handleTick() {
@@ -74,7 +69,7 @@ class TetrisEngine {
       this._state.active = this._state.next;
       this._moveActiveOntoBoard();
       const id = Math.random().toString().substring(2, 7);
-      this._state.next = createT(id, new Coord(5, -100));
+      this._state.next = createT(id);
       // todo: handle game over
       this._notifyListeners();
     }
@@ -282,4 +277,23 @@ function rowIsFilled(matrix, y) {
   }
 
   return true;
+}
+
+function moveToCenter(piece, state) {
+  const gridWidth = state.width();
+  let horizontalTranslation = 0;
+
+  if (piece.type === 'T') {
+    // todo: only works for rotations 0 and 2
+    const left = leftmostCoord(piece);
+    horizontalTranslation = Math.floor(gridWidth / 2 - left.x - 1);
+  }
+
+  let translated = piece;
+  // todo: this only works for translations to the right (positive numbers)
+  for (let i = 0; i < horizontalTranslation; i++) {
+    translated = translated.translateRight();
+  }
+
+  return translated;
 }

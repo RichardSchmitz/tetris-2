@@ -1,6 +1,6 @@
 import Konva from 'konva';
 
-export default class GameBoard {
+export class GameBoard {
   constructor(gridSize, mountId) {
     this.gridSize = gridSize;
     this.mountId = mountId;
@@ -12,7 +12,7 @@ export default class GameBoard {
 
   notify(state) {
     if (this.stage === null) {
-      this.initStage(state.debris.length, state.debris[0].length); // todo: possibly a better way to get grid dimensions
+      this.initStage(state);
     }
 
     // update active piece shape
@@ -23,11 +23,11 @@ export default class GameBoard {
 
       // Active piece
       this.shapes = [];
-      const active = this.createPolys(state.active);
+      const active = createPolys(this.gridSize, state.active);
       this.shapes = this.shapes.concat(active);
       // Stack pieces
       for (let piece of state.stack) {
-        const stack = this.createPolys(piece);
+        const stack = createPolys(this.gridSize, piece);
         this.shapes = this.shapes.concat(stack);
       }
 
@@ -36,48 +36,70 @@ export default class GameBoard {
     }
   }
 
-  createPolys(piece) {
-    return piece.coords.map(c => {
-      return new Konva.Rect({
-      x: c.x * this.gridSize,
-      y: c.y * this.gridSize,
-      width: this.gridSize,
-      height: this.gridSize,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 4
-    })});
-  }
-
-  initStage(width, height) {
-    this.stage = new Konva.Stage({
-      container: this.mountId,
-      width: this.gridSize * width,
-      height: this.gridSize * height
-    });
+  initStage(state) {
+    this.stage = createStage(this.gridSize, state.width(), state.height(), this.mountId);
 
     this.layerPieces = new Konva.Layer();
     this.stage.add(this.layerPieces);
     this.layerPieces.draw();
   }
+}
 
-  handleTick() {
-    if (this.activePiece) {
-      if (this._canMoveDown(this.activePiece)) {
-        this.activePiece.move(0, this.gridSize);
-        this.layerPieces.draw();
-      }
+export class Preview {
+  constructor(gridSize, mountId) {
+    this.gridSize = gridSize;
+    this.mountId = mountId;
+    this.stage = null;
+    this.layerPieces = null;
+    this.shapes = [];
+  }
+
+  notify(state) {
+    if (this.stage === null) {
+      this.initStage();
+    }
+
+    // update active piece shape
+    if (state.next !== null) {
+      // todo: nuke and pave every tick is probably very inefficient. Should do a diff
+      // or move shapes or something
+      this.shapes.forEach(s => s.destroy());
+
+      // Next piece
+      this.shapes = createPolys(this.gridSize, state.next);
+
+      this.shapes.forEach(s => this.layerPieces.add(s));
+      this.layerPieces.draw();
     }
   }
 
-  _gridCoord(c) {
-    return c / this.gridSize;
-  }
+  initStage() {
+    // Based on the size of the largest piece (I)
+    this.stage = createStage(this.gridSize, 4, 4, this.mountId);
 
-  deployPiece(piece) {
-    piece.addToContainer(this.layerPieces);
-    piece.moveTo(4 * this.gridSize, 0);
-    this.activePiece = piece;
+    this.layerPieces = new Konva.Layer();
+    this.stage.add(this.layerPieces);
     this.layerPieces.draw();
   }
+}
+
+function createStage(gridSize, width, height, mountId) {
+  return new Konva.Stage({
+    container: mountId,
+    width: gridSize * width,
+    height: gridSize * height
+  });
+}
+
+function createPolys(gridSize, piece) {
+  return piece.coords.map(c => {
+    return new Konva.Rect({
+      x: c.x * gridSize,
+      y: c.y * gridSize,
+      width: gridSize,
+      height: gridSize,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4
+    })});
 }

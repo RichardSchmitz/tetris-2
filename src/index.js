@@ -1,5 +1,6 @@
 import {TetrisEngine} from './engine';
-import GameBoard from './display.js';
+import {GameBoard, Preview} from './display.js';
+import {LevelDashboard, ScoreDashboard} from "./dashboard";
 import Keyboard from './controls';
 import './style.css';
 
@@ -8,6 +9,13 @@ const controls = new Keyboard(engine);
 const gridSize = 50;
 const display = new GameBoard(gridSize, 'gameboard');
 engine.addListener(display);
+const preview = new Preview(gridSize, 'preview');
+engine.addListener(preview);
+const level = new LevelDashboard('level', document);
+engine.addListener(level);
+const score = new ScoreDashboard('score', document);
+engine.addListener(score);
+
 engine.init();
 engine.start();
 

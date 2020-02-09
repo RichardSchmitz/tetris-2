@@ -11,7 +11,7 @@ body {
 
 #gameboard {
   /*margin: 10px auto 0px auto;*/
-  width: 500px;
+  width: 450px;
   display: inline-block;
 }
 
@@ -25,14 +25,14 @@ body {
 
 #sidebar-inner {
 padding: 5px;
-  background: #fff;
+  background: #666;
   display: inline-block;
   position: absolute;
-  width: 180px;
+  width: 210px;
   height: 490px;
   text-align: left;
 }
 
-.konvajs-content {
+#gameboard .konvajs-content {
   background-color: #aaaaaa;
 }
