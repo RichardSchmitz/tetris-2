@@ -31,6 +31,12 @@ padding: 5px;
   width: 210px;
   height: 490px;
   text-align: left;
+  font-family: monospace;
+}
+
+#sidebar-inner>div {
+  margin: 0px 0px 15px 0px;
+  color: #ddd;
 }
 
 #gameboard .konvajs-content {
