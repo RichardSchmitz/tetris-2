@@ -86,16 +86,21 @@ export class Preview {
 function createStage(gridSize, width, height, mountId) {
   return new Konva.Stage({
     container: mountId,
-    width: gridSize * width,
-    height: gridSize * height
+    // +4 (stroke width) so that we have enough room to draw the full stroke
+    // even when the piece is up against the right or bottom sides
+    width: gridSize * width + 4,
+    height: gridSize * height + 4
   });
 }
 
 function createPolys(gridSize, piece) {
   return piece.coords.map(c => {
     return new Konva.Rect({
-      x: c.x * gridSize,
-      y: c.y * gridSize,
+      // +2 (half the stroke-width) because otherwise the stroke is centered
+      // on the edge, meaning half of it is cut off when the piece is up
+      // against the top or left side
+      x: c.x * gridSize + 2,
+      y: c.y * gridSize + 2,
       width: gridSize,
       height: gridSize,
       fill: 'green',

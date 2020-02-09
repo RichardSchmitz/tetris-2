@@ -11,7 +11,7 @@ body {
 
 #gameboard {
   /*margin: 10px auto 0px auto;*/
-  width: 450px;
+  width: 454px;
   display: inline-block;
 }
 
@@ -29,7 +29,7 @@ padding: 5px;
   display: inline-block;
   position: absolute;
   width: 210px;
-  height: 490px;
+  height: 494px;
   text-align: left;
   font-family: monospace;
 }
