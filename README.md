@@ -17,16 +17,15 @@ $ npm run build # build production artifacts (optimized and without dev niceties
 
 ## Next steps
 
-1. ✅ Go through [Webpack guides](https://webpack.js.org/guides/getting-started/) to get familiar with the build system. Completed:
-  * Getting Started
-  * Asset Management (skipped through it)
-  * Output Management
-  * Development
-  * Hot Module Replacement (skimmed)
-  * Code Splitting
-  * Production
-2. ✅ Install Konva and figure out how to make a basic cavnas for the game and pieces
-3. ✅ Design classes and logic structure for game (using ES6 classes and Babel transpiling)
-  ✅ Figure out how to make custom shapes for pieces
-  ✅ Figure out how to rotate pieces
+1. Scoring/leveling algorithm
+2. Other pieces
+  * I
+  * Z
+  * S
+  * L
+  * J
+  * O
+3. Pause screen
+4. Automatic falling pieces
+5. Loss condition & game over screen
 ``
