@@ -1,5 +1,6 @@
 import {createT, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
 import {TetrisState} from './state';
+import {Scorable} from './scoring';
 import Coord from './coord';
 import * as matrixUtil from './matrix';
 import randomstring from 'randomstring';
@@ -11,6 +12,11 @@ class TetrisEngine {
     this._state = new TetrisState();
     this._state.debris = matrixUtil.createMatrix(gridWidth, gridHeight);
     this._listeners = [];
+    this.scoring = null;
+  }
+
+  setScoring(scoring) {
+    this.scoring = scoring;
   }
 
   addListener(listener) {
@@ -76,17 +82,20 @@ class TetrisEngine {
   }
 
   _handleRowCompletion() {
+    const scorable = new Scorable();
     // First construct matrix where each cell contains either null or a reference
     // to a piece in the stack
     const matrix = matrixUtil.createMatrix(this._state.width(), this._state.height());
     matrixUtil.fillMatrix(matrix, this._state.stack);
     // Determine which rows (if any) are complete.
+    // Rows are numbered from top (0) to bottom (height - 1).
     const completeRows = [];
     for (let j = 0; j < this._state.height(); j++) {
       if (rowIsFilled(matrix, j)) {
         completeRows.push(j);
       }
     }
+    scorable.rowsCleared = completeRows;
     if (completeRows.length === 0) {
       return;
     }
@@ -127,7 +136,10 @@ class TetrisEngine {
         }
       }
     }
-    // todo: update score
+
+    if (this.scoring) {
+      this.scoring.update(this._state, scorable);
+    }
   }
 
   handleMoveDown() {
