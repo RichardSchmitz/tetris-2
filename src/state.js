@@ -15,6 +15,7 @@ class TetrisState {
     this.level = 1;
     this.bonus = 0;
     this.score = 0;
+    this.totalRowsCleared = 0;
   }
 
   // todo: possibly a better way to get grid dimensions

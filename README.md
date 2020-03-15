@@ -26,6 +26,6 @@ $ npm run build # build production artifacts (optimized and without dev niceties
   * J
   * O
 3. Pause screen
-4. Automatic falling pieces
+4. Automatic falling pieces (see also: https://www.quora.com/How-do-Tetris-levels-work)
 5. Loss condition & game over screen
 ``
