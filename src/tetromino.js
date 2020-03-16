@@ -1,6 +1,6 @@
 import Coord from './coord';
 
-export {createT, _constructMatrix, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord};
+export {createT, createI, _constructMatrix, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord};
 
 class Tetromino {
   constructor(id, coords, type) {
@@ -34,9 +34,18 @@ function createT(id) {
   return createBlock(id, coords, 'T', 0);
 }
 
+function createI(id) {
+  const center = new Coord(1, 0);
+  let coords = [center, center.down(), center.down().down(), center.down().down().down()];
+
+  return createBlock(id, coords, 'I', 0);
+}
+
 function createBlock(id, coords, type, rotation) {
   if (type === 'T') {
     return new TBlock(id, coords, rotation);
+  } else if (type === 'I') {
+    return new IBlock(id, coords, rotation);
   }
 
   throw Exception(`No such type: ${type}`);
@@ -79,6 +88,37 @@ class TBlock extends Tetromino {
   }
 }
 
+// 2 possible rotations: 0 (vertical I), 1 (horizontal I)
+class IBlock extends Tetromino {
+  constructor(id, coords, rotation) {
+    super(id, coords, 'I');
+    this.rotation = rotation % 2;
+  }
+
+  rotateCw() {
+    const xMin = leftmostCoord(this).x;
+    const yMin = topmostCoord(this).y;
+
+    let origin = null;
+    let matrix = null;
+    if (this.rotation === 0) {
+      origin = new Coord(xMin - 1, yMin);
+      matrix = [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]] // matrix for rotation == 1
+    } else {
+      origin = new Coord(xMin, yMin - 1);
+      matrix = [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]]; // matrix for rotation == 0
+    }
+
+    const coords = _deconstructMatrix(matrix, origin);
+
+    return createBlock(this.id, coords, this.type, this.rotation + 1);
+  }
+
+  rotateCcw() {
+    return this.rotateCw();
+  }
+}
+
 // Matrices are indexed by x, then y, so the matrix is a list of columns
 // todo: is this function still required?
 function _constructMatrix(dimension, coords, origin) {
@@ -115,21 +155,25 @@ function _deconstructMatrix(matrix, origin) {
   return coords;
 }
 
+// ie. least x-value
 function leftmostCoord(piece) {
   // Sort by descending x value
   return _getLastCoord(piece.coords, (c1, c2) => c2.x - c1.x);
 }
 
+// ie. greatest x-value
 function rightmostCoord(piece) {
   // Sort by ascending x value
   return _getLastCoord(piece.coords, (c1, c2) => c1.x - c2.x);
 }
 
+// ie. least y-value
 function topmostCoord(piece) {
   // Sort by ascending y value
   return _getLastCoord(piece.coords, (c1, c2) => c2.y - c1.y);
 }
 
+// ie. greatest y-value
 function bottommostCoord(piece) {
   // Sort by ascending y value
   return _getLastCoord(piece.coords, (c1, c2) => c1.y - c2.y);
