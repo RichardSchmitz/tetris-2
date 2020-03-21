@@ -21,7 +21,7 @@ $ npm run build # build production artifacts (optimized and without dev niceties
 2. Other pieces
   * I ✅
   * Z ✅
-  * S
+  * S ✅
   * L
   * J
   * O

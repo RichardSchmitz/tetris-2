@@ -1,4 +1,4 @@
-import {createT, createI, createZ, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
+import {createT, createI, createZ, createS, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
 import {TetrisState} from './state';
 import {Scorable} from './scoring';
 import Coord from './coord';
@@ -77,11 +77,13 @@ class TetrisEngine {
       const id = Math.random().toString().substring(2, 7);
 
       // Choose next piece
-      const choice = Math.floor(Math.random() * 3);
+      const choice = Math.floor(Math.random() * 7);
       if (choice === 0) {
         this._state.next = createT(id);
       } else if (choice === 1) {
         this._state.next = createZ(id);
+      } else if (choice === 2) {
+        this._state.next = createS(id);
       } else {
         this._state.next = createI(id);
       }
