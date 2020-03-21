@@ -1,6 +1,6 @@
 import Coord from './coord';
 
-export {createT, createI, _constructMatrix, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord};
+export {createT, createI, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord};
 
 class Tetromino {
   constructor(id, coords, type) {
@@ -133,25 +133,6 @@ class IBlock extends Tetromino {
 }
 
 // Matrices are indexed by x, then y, so the matrix is a list of columns
-// todo: is this function still required?
-function _constructMatrix(dimension, coords, origin) {
-  const matrix = [];
-  for (let i = 0; i < dimension; i++) {
-    matrix.push([]);
-    for (let j = 0; j < dimension; j++) {
-      matrix[i].push(0);
-    }
-  }
-
-  for (const coord of coords) {
-    const x = coord.x - origin.x;
-    const y = coord.y - origin.y;
-    matrix[x][y] = 1;
-  }
-
-  return matrix;
-}
-
 // Given a matrix of 0's (representing nothing) and 1's (representing a coordinate),
 // and an origin point for the top left of the matrix, converts the matrix into
 // an array of Coords
