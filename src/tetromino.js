@@ -25,6 +25,19 @@ class Tetromino {
     let coords = this.coords.map(transform);
     return createBlock(this.id, coords, this.type, this.rotation);
   }
+
+  rotateCw() {
+      let origin = this.getOriginForRotation(this.rotation);
+      let matrix = this.getMatrixForRotation(this.rotation + 1);
+
+      const coords = _deconstructMatrix(matrix, origin);
+
+      return createBlock(this.id, coords, this.type, this.rotation + 1);
+  }
+
+   rotateCcw() {
+      return this.rotateCw().rotateCw().rotateCw();
+   }
 }
 
 function createT(id) {
@@ -53,77 +66,69 @@ function createBlock(id, coords, type, rotation) {
   throw Exception(`No such type: ${type}`);
 }
 
-// 4 possible positions: 0 (regular T), 1 (cw rotation), 2 (upside-down), 3 (ccw rotation)
 class TBlock extends Tetromino {
   constructor(id, coords, rotation) {
     super(id, coords, 'T');
     this.rotation = rotation % 4;
   }
 
-  rotateCw() {
+  getOriginForRotation(rotation) {
+    rotation = rotation % 4;
+
     const xMin = leftmostCoord(this).x;
     const yMin = topmostCoord(this).y;
 
-    let origin = null;
-    let matrix = null;
-
-    if (this.rotation === 2) {
-      origin = new Coord(xMin, yMin);
-      // matrix for rotation == 3
-      matrix = [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
-    } else if (this.rotation === 3) {
-      origin = new Coord(xMin - 1, yMin);
-      // matrix for rotation == 0
-      matrix = [[0, 1, 0], [0, 1, 1], [0, 1, 0]];
+    if (this.rotation === 3) {
+      return new Coord(xMin - 1, yMin);
     } else if (this.rotation === 0) {
-      origin = new Coord(xMin, yMin - 1);
-      // matrix for rotation == 1
-      matrix = [[0, 1, 0], [1, 1, 1], [0, 0, 0]];
+      return new Coord(xMin, yMin - 1);
     } else {
-      origin = new Coord(xMin, yMin);
-      // matrix for rotation == 2
-      matrix = [[0, 1, 0], [1, 1, 0], [0, 1, 0]];
+      return new Coord(xMin, yMin);
     }
-
-    const coords = _deconstructMatrix(matrix, origin);
-
-    return createBlock(this.id, coords, this.type, this.rotation + 1);
   }
 
-  rotateCcw() {
-    return this.rotateCw().rotateCw().rotateCw();
+  getMatrixForRotation(rotation) {
+    rotation = rotation % 4;
+
+    if (rotation === 0) {
+      return [[0, 1, 0], [0, 1, 1], [0, 1, 0]];
+    } else if (rotation === 1) {
+      return [[0, 1, 0], [1, 1, 1], [0, 0, 0]];
+    } else if (rotation === 2) {
+      return [[0, 1, 0], [1, 1, 0], [0, 1, 0]];
+    } else {
+      return [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
+    }
   }
 }
 
-// 2 possible rotations: 0 (vertical I), 1 (horizontal I)
 class IBlock extends Tetromino {
   constructor(id, coords, rotation) {
     super(id, coords, 'I');
     this.rotation = rotation % 2;
   }
 
-  rotateCw() {
+  getOriginForRotation(rotation) {
+    rotation = rotation % 2;
+
     const xMin = leftmostCoord(this).x;
     const yMin = topmostCoord(this).y;
 
-    let origin = null;
-    let matrix = null;
-
     if (this.rotation === 0) {
-      origin = new Coord(xMin - 1, yMin);
-      matrix = [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]] // matrix for rotation == 1
+      return new Coord(xMin - 1, yMin);
     } else {
-      origin = new Coord(xMin, yMin - 1);
-      matrix = [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]]; // matrix for rotation == 0
+      return new Coord(xMin, yMin - 1);
     }
-
-    const coords = _deconstructMatrix(matrix, origin);
-
-    return createBlock(this.id, coords, this.type, this.rotation + 1);
   }
 
-  rotateCcw() {
-    return this.rotateCw();
+  getMatrixForRotation(rotation) {
+    rotation = rotation % 2;
+
+    if (rotation === 0) {
+      return [[0, 0, 0, 0], [1, 1, 1, 1], [0, 0, 0, 0], [0, 0, 0, 0]];
+    } else {
+      return [[0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0], [0, 1, 0, 0]];
+    }
   }
 }
 
