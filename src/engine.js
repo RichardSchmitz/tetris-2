@@ -306,6 +306,10 @@ function moveToCenter(piece, state) {
     // todo: only works for rotations 0 and 2
     const left = leftmostCoord(piece);
     horizontalTranslation = Math.floor(gridWidth / 2 - left.x - 1);
+  } else if (piece.type === 'I') {
+    // todo: only works for rotation 0
+    const left = leftmostCoord(piece);
+    horizontalTranslation = Math.floor(gridWidth / 2 - left.x);
   }
 
   let translated = piece;
