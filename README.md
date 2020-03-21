@@ -20,7 +20,7 @@ $ npm run build # build production artifacts (optimized and without dev niceties
 1. Scoring/leveling algorithm ✅
 2. Other pieces
   * I ✅
-  * Z
+  * Z ✅
   * S
   * L
   * J

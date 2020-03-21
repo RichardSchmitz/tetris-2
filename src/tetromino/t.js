@@ -10,7 +10,7 @@ const MATRIX_ROT_3 = [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
 
 function createT(id) {
   const origin = new Coord(0, 0);
-  const matrix = [[0, 1, 0], [1, 1, 0], [0, 1, 0]];
+  const matrix = MATRIX_ROT_2;
   const coords = deconstructMatrix(matrix, origin);
 
   return new TBlock(id, coords, 2);
