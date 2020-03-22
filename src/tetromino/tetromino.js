@@ -37,6 +37,14 @@ class Tetromino {
    rotateCcw() {
       return this.rotateCw().rotateCw().rotateCw();
    }
+
+
+  getMatrixForRotation(rotation) {
+    const rotations = this.getRotations();
+    rotation = rotation % rotations.length;
+
+    return rotations[rotation];
+  }
 }
 
 // Matrices are indexed by x, then y, so the matrix is a list of columns

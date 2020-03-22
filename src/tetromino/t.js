@@ -37,19 +37,9 @@ class TBlock extends Tetromino {
     }
   }
 
-  getMatrixForRotation(rotation) {
-    rotation = rotation % 4;
-
-    if (rotation === 0) {
-      return MATRIX_ROT_0;
-    } else if (rotation === 1) {
-      return MATRIX_ROT_1;
-    } else if (rotation === 2) {
-      return MATRIX_ROT_2;
-    } else {
-      return MATRIX_ROT_3;
+   getRotations() {
+      return [MATRIX_ROT_0, MATRIX_ROT_1, MATRIX_ROT_2, MATRIX_ROT_3];
     }
-  }
 
   createBlock(coords, rotation) {
     return new TBlock(this.id, coords, rotation);

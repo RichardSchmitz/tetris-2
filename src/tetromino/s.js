@@ -33,15 +33,9 @@ class SBlock extends Tetromino {
     }
   }
 
-  getMatrixForRotation(rotation) {
-    rotation = rotation % 2;
-
-    if (rotation === 0) {
-      return MATRIX_ROT_0;
-    }  else {
-      return MATRIX_ROT_1;
+   getRotations() {
+      return [MATRIX_ROT_0, MATRIX_ROT_1];
     }
-  }
 
   createBlock(coords, rotation) {
     return new SBlock(this.id, coords, rotation);
