@@ -1,9 +1,8 @@
-import {createT, createI, createZ, createS, createL, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
+import {randomTetromino, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
 import {TetrisState} from './state';
 import {Scorable} from './scoring';
 import Coord from './coord';
 import * as matrixUtil from './matrix';
-import randomstring from 'randomstring';
 
 export {TetrisEngine};
 
@@ -24,13 +23,9 @@ class TetrisEngine {
     this._listeners.push(listener);
   }
 
-  _newId() {
-    return randomstring.generate(8);
-  }
-
   init() {
     // put at y=0 to keep it off the current gameboard. Maybe there's a more elegant solution.
-    this._state.next = createT(this._newId());
+    this._state.next = randomTetromino();
     this._notifyListeners();
   }
 
@@ -40,7 +35,7 @@ class TetrisEngine {
     const gameOver = this._state.gameOver;
     if (!(paused || started || gameOver)) {
       this._state.active = this._state.next;
-      this._state.next = createT(this._newId());
+      this._state.next = randomTetromino();
       this._moveActiveOntoBoard();
 
       this._state.started = true;
@@ -77,18 +72,7 @@ class TetrisEngine {
       const id = Math.random().toString().substring(2, 7);
 
       // Choose next piece
-      const choice = Math.floor(Math.random() * 7);
-      if (choice === 0) {
-        this._state.next = createT(id);
-      } else if (choice === 1) {
-        this._state.next = createZ(id);
-      } else if (choice === 2) {
-        this._state.next = createS(id);
-      } else if (choice === 3) {
-        this._state.next = createL(id);
-      } else {
-        this._state.next = createI(id);
-      }
+      this._state.next = randomTetromino();
 
       // todo: handle game over
       this._notifyListeners();
