@@ -1,4 +1,4 @@
-import {createT, createI, createZ, createS, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
+import {createT, createI, createZ, createS, createL, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
 import {TetrisState} from './state';
 import {Scorable} from './scoring';
 import Coord from './coord';
@@ -84,6 +84,8 @@ class TetrisEngine {
         this._state.next = createZ(id);
       } else if (choice === 2) {
         this._state.next = createS(id);
+      } else if (choice === 3) {
+        this._state.next = createL(id);
       } else {
         this._state.next = createI(id);
       }

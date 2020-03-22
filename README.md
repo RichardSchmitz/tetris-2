@@ -22,7 +22,7 @@ $ npm run build # build production artifacts (optimized and without dev niceties
   * I ✅
   * Z ✅
   * S ✅
-  * L
+  * L ✅
   * J
   * O
 3. Pause screen
