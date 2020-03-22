@@ -306,23 +306,35 @@ function rowIsFilled(matrix, y) {
 }
 
 function moveToCenter(piece, state) {
-  const gridWidth = state.width();
-  let horizontalTranslation = 0;
+  const boardWidth = state.width();
+  const pieceMatrixWidth = piece.getRotations()[0].length;
+  // Origin is the top left coordinate in the piece matrix (may or
+  // may not be empty).
+  const originCoord = piece.getOriginForRotation(piece.rotation);
 
-  if (piece.type === 'T') {
-    // todo: only works for rotations 0 and 2
-    const left = leftmostCoord(piece);
-    horizontalTranslation = Math.floor(gridWidth / 2 - left.x - 1);
-  } else if (piece.type === 'I') {
-    // todo: only works for rotation 0
-    const left = leftmostCoord(piece);
-    horizontalTranslation = Math.floor(gridWidth / 2 - left.x);
-  }
+  // Strategy: Make the number of columns on either side of the matrix
+  // equal. eg. board is 9 columns wide and the piece matrix is 3. Since
+  // there are 9 - 3 = 6 unused columns total, we want 6 / 2 = 3 columns
+  // on either side. If there is an odd number of unused columns, make
+  // the larger number on the left (due to I block being left-of-centre
+  // already)
+  const unusedColumns = boardWidth - pieceMatrixWidth; // This must always be positive
+  const leftSideColumns = Math.ceil(unusedColumns / 2);
+
+  // How much do we have to translate this piece (positive or negative).
+  // eg. if we want 3 columns on the left and the origin is currently
+  // at (1, 0), we need to translate it 3 - 1 = 2 spaces right.
+  const horizontalTranslation = leftSideColumns - originCoord.x;
 
   let translated = piece;
-  // todo: this only works for translations to the right (positive numbers)
-  for (let i = 0; i < horizontalTranslation; i++) {
-    translated = translated.translateRight();
+  if (horizontalTranslation > 0) {
+    for (let i = 0; i < horizontalTranslation; i++) {
+      translated = translated.translateRight();
+    }
+  } else if (horizontalTranslation < 0) {
+    for (let i = horizontalTranslation; i < 0; i++) {
+      translated = translated.translateLeft();
+    }
   }
 
   return translated;
