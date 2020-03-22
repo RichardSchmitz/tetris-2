@@ -5,6 +5,12 @@ export {createS} from './s';
 export {createL} from './l';
 export {leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord} from './tetromino';
 
+import {createI} from './i';
+import {createT} from './t';
+import {createZ} from './z';
+import {createS} from './s';
+import {createL} from './l';
+
 export function randomTetromino() {
   const id = Math.random().toString().substring(2, 7);
 
