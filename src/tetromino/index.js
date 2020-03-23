@@ -4,6 +4,7 @@ export {createZ} from './z';
 export {createS} from './s';
 export {createL} from './l';
 export {createJ} from './j';
+export {createO} from './o';
 export {leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord} from './tetromino';
 
 import {createI} from './i';
@@ -12,6 +13,7 @@ import {createZ} from './z';
 import {createS} from './s';
 import {createL} from './l';
 import {createJ} from './j';
+import {createO} from './o';
 
 export function randomTetromino() {
   const id = Math.random().toString().substring(2, 7);
@@ -27,6 +29,8 @@ export function randomTetromino() {
     return createL(id);
   } else if (choice === 4) {
     return createJ(id);
+  } else if (choice === 5) {
+    return createO(id);
   } else {
     return createI(id);
   }
