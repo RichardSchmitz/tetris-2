@@ -79,6 +79,8 @@ class TetrisEngine {
     }
   }
 
+  // todo: there is a bug in here that sometimes clears a row but doesn't move rows above it
+  // down. Seems to happen at row 3 (counting from bottom=1)
   _handleRowCompletion() {
     const scorable = new Scorable();
     // First construct matrix where each cell contains either null or a reference

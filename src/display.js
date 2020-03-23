@@ -94,6 +94,8 @@ function createStage(gridSize, width, height, mountId) {
 }
 
 function createPolys(gridSize, piece) {
+  const color = chooseColor(piece);
+
   return piece.coords.map(c => {
     return new Konva.Rect({
       // +2 (half the stroke-width) because otherwise the stroke is centered
@@ -103,8 +105,26 @@ function createPolys(gridSize, piece) {
       y: c.y * gridSize + 2,
       width: gridSize,
       height: gridSize,
-      fill: 'green',
+      fill: color,
       stroke: 'black',
       strokeWidth: 4
     })});
+}
+
+function chooseColor(piece) {
+  if (piece.type === 'I') {
+    return '#1ee2e6'
+  } else if (piece.type === 'J') {
+    return '#1b1be3'
+  } else if (piece.type === 'L') {
+    return '#dbb418'
+  } else if (piece.type === 'O') {
+    return '#d2d918'
+  } else if (piece.type === 'S') {
+    return '#1cd415'
+  } else if (piece.type === 'T') {
+    return '#8715d4'
+  }  else if (piece.type === 'Z') {
+    return '#d4152b'
+  }
 }
