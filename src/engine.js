@@ -49,6 +49,10 @@ class TetrisEngine {
   }
 
   handleTick() {
+    if (this._state.paused) {
+      return;
+    }
+
     // Step 1: check if the active piece is stuck. Stuck means it has no room underneath it to move down.
     //         If so, do not handle the move, and instead handle transition to a new piece.
     //         That means 1. check for a completed row. If necessary, remove the row, move everything down,
@@ -143,6 +147,10 @@ class TetrisEngine {
   }
 
   handleMoveDown() {
+    if (this._state.paused) {
+      return;
+    }
+
     if (this._canMoveDown(this._state.active)) {
       this._state.active = this._state.active.translateDown();
       this._notifyListeners();
@@ -156,6 +164,10 @@ class TetrisEngine {
   }
 
   handleMoveRight() {
+    if (this._state.paused) {
+      return;
+    }
+
     if (this._canMoveRight(this._state.active)) {
       this._state.active = this._state.active.translateRight();
       this._notifyListeners();
@@ -169,6 +181,10 @@ class TetrisEngine {
   }
 
   handleMoveLeft() {
+    if (this._state.paused) {
+      return;
+    }
+
     if (this._canMoveLeft(this._state.active)) {
       this._state.active = this._state.active.translateLeft();
       this._notifyListeners();
@@ -182,6 +198,10 @@ class TetrisEngine {
   }
 
   handleRotateCw() {
+    if (this._state.paused) {
+      return;
+    }
+
     if (this._canRotateCw(this._state.active)) {
       this._state.active = this._state.active.rotateCw();
       this._notifyListeners();
@@ -213,6 +233,10 @@ class TetrisEngine {
   }
 
   handleRotateCcw() {
+    if (this._state.paused) {
+      return;
+    }
+
     if (this._canRotateCcw(this._state.active)) {
       this._state.active = this._state.active.rotateCcw();
       this._notifyListeners();
@@ -223,6 +247,11 @@ class TetrisEngine {
       this._state.active = this._state.active.translateLeft().rotateCcw();
       this._notifyListeners();
     }
+  }
+
+  handleTogglePause() {
+    this._state.paused = !this._state.paused;
+    this._notifyListeners();
   }
 
   _illegalPosition(piece) {

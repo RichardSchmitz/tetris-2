@@ -1,3 +1,4 @@
+// https://keycode.info/
 const ENTER = 13;
 const LEFT = 65; // a
 const RIGHT = 68; // d
@@ -7,6 +8,7 @@ const DOWN = 83; // s
 //const DOWN = 40; // down arrow
 const ROTATE_CW = 39; // right arrow
 const ROTATE_CCW = 37; // left arrow
+const PAUSE = 80;
 
 export default class Keyboard {
   constructor(engine) {
@@ -58,6 +60,8 @@ export default class Keyboard {
       this.engine.handleRotateCw();
     } else if (event.keyCode === ROTATE_CCW) {
       this.engine.handleRotateCcw();
+    } else if (event.keyCode === PAUSE) {
+      this.engine.handleTogglePause();
     }
   }
 }

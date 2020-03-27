@@ -15,22 +15,31 @@ export class GameBoard {
       this.initStage(state);
     }
 
+    this.layerPieces.destroyChildren();
+
+    if (state.paused) {
+      this.layerPieces.add(pauseMessage(this.stage));
+    }
+
     // update active piece shape
     if (state.active !== null) {
       // todo: nuke and pave every tick is probably very inefficient. Should do a diff
       // or move shapes or something
+      // todo: don't actually need this with destroyChildren() above
       this.shapes.forEach(s => s.destroy());
 
       // Active piece
       this.shapes = [];
-      const active = createPolys(this.gridSize, state.active);
-      this.shapes = this.shapes.concat(active);
-      // Stack pieces
-      for (let piece of state.stack) {
-        const stack = createPolys(this.gridSize, piece);
-        this.shapes = this.shapes.concat(stack);
-      }
 
+      if (!state.paused) {
+        const active = createPolys(this.gridSize, state.active);
+        this.shapes = this.shapes.concat(active);
+        // Stack pieces
+        for (let piece of state.stack) {
+          const stack = createPolys(this.gridSize, piece);
+          this.shapes = this.shapes.concat(stack);
+        }
+      }
       this.shapes.forEach(s => this.layerPieces.add(s));
       this.layerPieces.draw();
     }
@@ -66,9 +75,10 @@ export class Preview {
       this.shapes.forEach(s => s.destroy());
 
       // Next piece
-      this.shapes = createPolys(this.gridSize, state.next);
-
-      this.shapes.forEach(s => this.layerPieces.add(s));
+      if (!state.paused) {
+        this.shapes = createPolys(this.gridSize, state.next);
+        this.shapes.forEach(s => this.layerPieces.add(s));
+      }
       this.layerPieces.draw();
     }
   }
@@ -81,6 +91,26 @@ export class Preview {
     this.stage.add(this.layerPieces);
     this.layerPieces.draw();
   }
+}
+
+function pauseMessage(stage) {
+  console.log("Pause is on");
+
+  const text = new Konva.Text({
+    x: stage.width() / 2,
+    y: stage.height() / 2,
+    text: 'GAME PAUSED',
+    fontSize: 50,
+    stroke: '#424242',
+    strokeWidth: 1,
+    fontFamily: 'Arial',
+    fill: '#ffbb00',
+  });
+
+  text.offsetX(text.width() / 2);
+  text.offsetY(text.height() / 2);
+
+  return text;
 }
 
 function createStage(gridSize, width, height, mountId) {
