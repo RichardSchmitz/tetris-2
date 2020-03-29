@@ -9,6 +9,10 @@ class Tetromino {
     this.type = type;
   }
 
+  translateUp() {
+    return this.translate(c => c.up());
+  }
+
   translateDown() {
     return this.translate(c => c.down());
   }

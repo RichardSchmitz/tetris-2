@@ -17,7 +17,7 @@ export class GameBoard {
 
     this.layerPieces.destroyChildren();
 
-    if (state.paused) {
+     if (state.paused) {
       this.layerPieces.add(pauseMessage(this.stage));
     }
 
@@ -41,6 +41,9 @@ export class GameBoard {
         }
       }
       this.shapes.forEach(s => this.layerPieces.add(s));
+      if (state.gameOver) {
+        this.layerPieces.add(gameOverMessage(this.stage));
+      }
       this.layerPieces.draw();
     }
   }
@@ -94,15 +97,21 @@ export class Preview {
 }
 
 function pauseMessage(stage) {
-  console.log("Pause is on");
+  return textMessage(stage, 'GAME PAUSED');
+}
 
+function gameOverMessage(stage) {
+  return textMessage(stage, 'GAME OVER');
+}
+
+function textMessage(stage, message) {
   const text = new Konva.Text({
     x: stage.width() / 2,
     y: stage.height() / 2,
-    text: 'GAME PAUSED',
+    text: message,
     fontSize: 50,
-    stroke: '#424242',
-    strokeWidth: 1,
+    // stroke: '#424242',
+    // strokeWidth: 1,
     fontFamily: 'Arial',
     fill: '#ffbb00',
   });

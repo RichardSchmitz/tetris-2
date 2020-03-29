@@ -36,7 +36,7 @@ class TetrisEngine {
     if (!(paused || started || gameOver)) {
       this._state.active = this._state.next;
       this._state.next = randomTetromino();
-      this._moveActiveOntoBoard();
+      this._positionActiveOnBoard();
 
       this._state.started = true;
       this._notifyListeners();
@@ -44,12 +44,13 @@ class TetrisEngine {
     }
   }
 
-  _moveActiveOntoBoard() {
+  _positionActiveOnBoard() {
     this._state.active = moveToCenter(this._state.active, this._state);
+    this._state.active = this._moveUpUntilNoOverlap(this._state.active);
   }
 
   handleTick() {
-    if (this._state.paused) {
+    if (this._state.paused || this._state.gameOver) {
       return;
     }
 
@@ -72,13 +73,17 @@ class TetrisEngine {
 
       // set up next piece
       this._state.active = this._state.next;
-      this._moveActiveOntoBoard();
-      const id = Math.random().toString().substring(2, 7);
+      this._positionActiveOnBoard();
 
       // Choose next piece
       this._state.next = randomTetromino();
 
-      // todo: handle game over
+      // handle game over
+      if (this._illegalPosition(this._state.active)) {
+        this._state.gameOver = true;
+      }
+
+      // notify listeners
       this._notifyListeners();
     }
   }
@@ -147,7 +152,7 @@ class TetrisEngine {
   }
 
   handleMoveDown() {
-    if (this._state.paused) {
+    if (this._state.paused || this._state.gameOver) {
       return;
     }
 
@@ -164,7 +169,7 @@ class TetrisEngine {
   }
 
   handleMoveRight() {
-    if (this._state.paused) {
+    if (this._state.paused || this._state.gameOver) {
       return;
     }
 
@@ -181,7 +186,7 @@ class TetrisEngine {
   }
 
   handleMoveLeft() {
-    if (this._state.paused) {
+    if (this._state.paused || this._state.gameOver) {
       return;
     }
 
@@ -198,7 +203,7 @@ class TetrisEngine {
   }
 
   handleRotateCw() {
-    if (this._state.paused) {
+    if (this._state.paused || this._state.gameOver) {
       return;
     }
 
@@ -250,6 +255,10 @@ class TetrisEngine {
   }
 
   handleTogglePause() {
+    if (this._state.gameOver) {
+      return;
+    }
+
     this._state.paused = !this._state.paused;
     this._notifyListeners();
   }
@@ -307,6 +316,16 @@ class TetrisEngine {
       listener.notify(this._state);
     }
   }
+
+  _moveUpUntilNoOverlap(piece) {
+    let translated = piece;
+
+    while (this._collidesWithStack(translated)) {
+      translated = translated.translateUp();
+    }
+
+    return translated;
+  }
 }
 
 // Returns true iff row y of the matrix consists of all non-null values
@@ -354,3 +373,4 @@ function moveToCenter(piece, state) {
 
   return translated;
 }
+
