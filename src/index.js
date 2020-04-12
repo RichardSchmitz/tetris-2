@@ -22,8 +22,6 @@ engine.addListener(score);
 engine.init();
 engine.start();
 
-// board.deployPiece(t);
-
 document.addEventListener('keydown', e => controls.handleEvent(e));
 
 // window.setInterval(() => board.handleTick(), 1000);
