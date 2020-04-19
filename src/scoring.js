@@ -13,7 +13,7 @@ class ModernScoringSystem {
   }
 
   update(state, scorable) {
-    if (!scorable.rowsCleared) {
+    if (!scorable.rowsCleared.length) {
       // Nothing to do
       return;
     }
