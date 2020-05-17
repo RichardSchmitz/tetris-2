@@ -8,14 +8,18 @@ export {TetrisEngine};
 
 class TetrisEngine {
   constructor(gridWidth, gridHeight) {
-    this._state = new TetrisState();
-    this._state.debris = matrixUtil.createMatrix(gridWidth, gridHeight);
+    this._state = new TetrisState(gridWidth, gridHeight);
     this._listeners = [];
     this.scoring = null;
+    this._nextTetromino = randomTetromino;
   }
 
   setScoring(scoring) {
     this.scoring = scoring;
+  }
+
+  setTetrominoGenerator(generator) {
+    this._nextTetromino = generator;
   }
 
   addListener(listener) {
@@ -25,7 +29,7 @@ class TetrisEngine {
 
   init() {
     // put at y=0 to keep it off the current gameboard. Maybe there's a more elegant solution.
-    this._state.next = randomTetromino();
+    this._state.next = this._nextTetromino();
     this._notifyListeners();
   }
 
@@ -35,13 +39,17 @@ class TetrisEngine {
     const gameOver = this._state.gameOver;
     if (!(paused || started || gameOver)) {
       this._state.active = this._state.next;
-      this._state.next = randomTetromino();
+      this._state.next = this._nextTetromino();
       this._positionActiveOnBoard();
 
       this._state.started = true;
       this._notifyListeners();
       // todo: set timeout/scheduled function to move the game forward
     }
+  }
+
+  submit(action) {
+    action.execute(this);
   }
 
   _positionActiveOnBoard() {
@@ -76,7 +84,7 @@ class TetrisEngine {
       this._positionActiveOnBoard();
 
       // Choose next piece
-      this._state.next = randomTetromino();
+      this._state.next = this._nextTetromino();
 
       // handle game over
       if (this._illegalPosition(this._state.active)) {
@@ -282,11 +290,11 @@ class TetrisEngine {
   }
 
   _pastBottomBoundary(coord) {
-    return coord.y >= this._state.debris[0].length;
+    return coord.y >= this._state.height();
   }
 
   _pastRightBoundary(coord) {
-    return coord.x >= this._state.debris.length;
+    return coord.x >= this._state.width();
   }
 
   _pastLeftBoundary(coord) {

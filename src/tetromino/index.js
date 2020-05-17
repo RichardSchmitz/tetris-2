@@ -16,7 +16,7 @@ import {createJ} from './j';
 import {createO} from './o';
 
 export function randomTetromino() {
-  const id = Math.random().toString().substring(2, 7);
+  const id = randomId();
 
   const choice = Math.floor(Math.random() * 7);
   if (choice === 0) {
@@ -34,4 +34,8 @@ export function randomTetromino() {
   } else {
     return createI(id);
   }
+}
+
+export function randomId() {
+  return Math.random().toString().substring(2, 7);
 }

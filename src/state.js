@@ -1,12 +1,13 @@
 export {TetrisState};
 
 class TetrisState {
-  constructor() {
+  constructor(gridWidth, gridHeight) {
     this.next = null;
     this.active = null;
     // Matrix of pieces. Not sure if this is needed but
     // currently used for determining the gameboard dimensions
-    this.debris = null;
+    this.gridWidth = gridWidth;
+    this.gridHeight = gridHeight;
     // Array of dead pieces
     this.stack = [];
     this.paused = false;
@@ -20,10 +21,10 @@ class TetrisState {
 
   // todo: possibly a better way to get grid dimensions
   width() {
-    return this.debris.length;
+    return this.gridWidth;
   }
 
   height() {
-    return this.debris[0].length;
+    return this.gridHeight;
   }
 }
