@@ -4,9 +4,7 @@ import {Scorable} from './scoring';
 import Coord from './coord';
 import * as matrixUtil from './matrix';
 
-export {TetrisEngine};
-
-class TetrisEngine {
+export class TetrisEngine {
   constructor(gridWidth, gridHeight) {
     this._state = new TetrisState(gridWidth, gridHeight);
     this._listeners = [];

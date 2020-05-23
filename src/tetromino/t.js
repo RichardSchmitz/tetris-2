@@ -1,7 +1,7 @@
 import {Tetromino, leftmostCoord, topmostCoord, deconstructMatrix} from './tetromino';
 import Coord from '../coord';
 
-export {createT};
+export {createT, TBlock};
 
 const MATRIX_ROT_0 = [[0, 1, 0], [0, 1, 1], [0, 1, 0]];
 const MATRIX_ROT_1 = [[0, 1, 0], [1, 1, 1], [0, 0, 0]];
