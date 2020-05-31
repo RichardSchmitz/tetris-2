@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
-import Coord from '../coord';
+import { Coord } from '../coord';
 
 describe('Tetromino Utils', function() {
   it('Topmost coord', function() {

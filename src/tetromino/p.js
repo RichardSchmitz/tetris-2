@@ -1,9 +1,11 @@
 import { Tetromino } from './tetromino';
-import Coord from '../coord';
+import { Coord } from '../coord';
 
-export {createP};
+export { createP, PixelTetromino, ROTATIONS };
 
 const MATRIX_ROT_0 = [[1]];
+
+const ROTATIONS = [MATRIX_ROT_0];
 
 function createP(id) {
   return new PixelTetromino(id, new Coord(0, 0))
@@ -24,7 +26,7 @@ class PixelTetromino extends Tetromino {
   }
 
   getRotations() {
-    return [MATRIX_ROT_0];
+    return ROTATIONS;
   }
 
   createBlock(coords, rotation) {

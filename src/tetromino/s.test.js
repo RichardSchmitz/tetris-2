@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {createS} from './s';
-import Coord from '../coord';
+import { Coord } from '../coord';
 
 describe('S Tetromino', function() {
   it('Constructor', function() {

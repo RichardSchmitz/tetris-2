@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {createP} from './p';
-import Coord from '../coord';
+import { Coord } from '../coord';
 
 describe('Pixel Tetromino', function () {
   it('Constructor', function() {

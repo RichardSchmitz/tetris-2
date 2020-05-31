@@ -1,4 +1,4 @@
-import Coord from '../coord';
+import * as coord from '../coord';
 
 export {Tetromino, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord, deconstructMatrix};
 
@@ -60,7 +60,7 @@ function deconstructMatrix(matrix, origin) {
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[i].length; j++) {
       if (matrix[i][j] === 1) {
-        coords.push(new Coord(i + origin.x, j + origin.y));
+        coords.push(new coord.Coord(i + origin.x, j + origin.y));
       }
     }
   }
@@ -68,32 +68,19 @@ function deconstructMatrix(matrix, origin) {
   return coords;
 }
 
-// ie. least x-value
 function leftmostCoord(piece) {
-  // Sort by descending x value
-  return _getLastCoord(piece.coords, (c1, c2) => c2.x - c1.x);
+  return coord.leftmost(piece.coords);
 }
 
-// ie. greatest x-value
 function rightmostCoord(piece) {
-  // Sort by ascending x value
-  return _getLastCoord(piece.coords, (c1, c2) => c1.x - c2.x);
+  return coord.rightmost(piece.coords);
 }
 
-// ie. least y-value
 function topmostCoord(piece) {
-  // Sort by ascending y value
-  return _getLastCoord(piece.coords, (c1, c2) => c2.y - c1.y);
+  return coord.topmost(piece.coords);
 }
 
-// ie. greatest y-value
 function bottommostCoord(piece) {
-  // Sort by ascending y value
-  return _getLastCoord(piece.coords, (c1, c2) => c1.y - c2.y);
+  return coord.bottommost(piece.coords);
 }
 
-function _getLastCoord(coords, arrangement) {
-  return coords.slice() // Create a shallow copy of the array
-               .sort(arrangement)
-               .pop(); // Get the last one (this modifies the array, which is why we created a copy)
-}

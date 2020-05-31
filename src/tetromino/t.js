@@ -1,12 +1,14 @@
 import {Tetromino, leftmostCoord, topmostCoord, deconstructMatrix} from './tetromino';
-import Coord from '../coord';
+import { Coord } from '../coord';
 
-export {createT, TBlock};
+export { createT, TBlock, ROTATIONS };
 
 const MATRIX_ROT_0 = [[0, 1, 0], [0, 1, 1], [0, 1, 0]];
 const MATRIX_ROT_1 = [[0, 1, 0], [1, 1, 1], [0, 0, 0]];
 const MATRIX_ROT_2 = [[0, 1, 0], [1, 1, 0], [0, 1, 0]];
 const MATRIX_ROT_3 = [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
+
+const ROTATIONS = [MATRIX_ROT_0, MATRIX_ROT_1, MATRIX_ROT_2, MATRIX_ROT_3];
 
 function createT(id) {
   const origin = new Coord(0, 0);
@@ -38,10 +40,18 @@ class TBlock extends Tetromino {
   }
 
    getRotations() {
-      return [MATRIX_ROT_0, MATRIX_ROT_1, MATRIX_ROT_2, MATRIX_ROT_3];
+      return ROTATIONS;
     }
 
   createBlock(coords, rotation) {
     return new TBlock(this.id, coords, rotation);
   }
+}
+
+function detectRotation(coords) {
+  if (coords.length != 4) {
+    throw new Error(`Expected 4 coords, but got ${coords.length}`)
+  }
+
+  const left = leftmostCoord()
 }

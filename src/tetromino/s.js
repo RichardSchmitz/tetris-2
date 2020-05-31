@@ -1,10 +1,12 @@
 import {Tetromino, leftmostCoord, topmostCoord, deconstructMatrix} from './tetromino';
-import Coord from '../coord';
+import { Coord } from '../coord';
 
-export {createS};
+export { createS, ROTATIONS };
 
 const MATRIX_ROT_0 = [[0, 1, 0], [1, 1, 0], [1, 0, 0]];
 const MATRIX_ROT_1 = [[0, 0, 0], [1, 1, 0], [0, 1, 1]];
+
+const ROTATIONS = [MATRIX_ROT_0, MATRIX_ROT_1];
 
 function createS(id) {
   const origin = new Coord(0, 0);
@@ -34,7 +36,7 @@ class SBlock extends Tetromino {
   }
 
    getRotations() {
-      return [MATRIX_ROT_0, MATRIX_ROT_1];
+      return ROTATIONS;
     }
 
   createBlock(coords, rotation) {

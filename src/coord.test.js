@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Coord from './coord';
+import { Coord } from './coord';
 
 describe('Coord', function() {
   it('Constructed with literal coordinates', function() {

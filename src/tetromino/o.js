@@ -1,9 +1,11 @@
 import {Tetromino, leftmostCoord, topmostCoord, deconstructMatrix} from './tetromino';
-import Coord from '../coord';
+import { Coord } from '../coord';
 
-export {createO};
+export { createO, ROTATIONS };
 
 const MATRIX_ROT_0 = [[1, 1], [1, 1]];
+
+const ROTATIONS = [MATRIX_ROT_0];
 
 function createO(id) {
   const origin = new Coord(0, 0);
@@ -27,7 +29,7 @@ class OBlock extends Tetromino {
   }
 
    getRotations() {
-      return [MATRIX_ROT_0];
+      return ROTATIONS;
     }
 
   createBlock(coords, rotation) {

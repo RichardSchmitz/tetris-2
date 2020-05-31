@@ -1,10 +1,3 @@
-const MOVE_DOWN = 'move_down';
-const MOVE_LEFT = 'move_left';
-const MOVE_RIGHT = 'move_right';
-const ROTATE_CW = 'rotate_cw';
-const ROTATE_CCW = 'rotate_ccw';
-const PAUSE = 'pause';
-
 function moveDown() {
   return build(e => e.handleMoveDown());
 }
@@ -12,8 +5,6 @@ function moveDown() {
 function moveLeft() {
   return build(e => e.handleMoveLeft());
 }
-
-// function isMoveLeft
 
 function moveRight() {
   return build(e => e.handleMoveRight());
@@ -31,6 +22,10 @@ function pause() {
   return build(e => e.handleTogglePause());
 }
 
+function tick() {
+  return build(e => e.handleTick());
+}
+
 function build(f) {
   return {
     execute: f
@@ -38,5 +33,5 @@ function build(f) {
 }
 
 export {
-  moveDown, moveLeft, moveRight, rotateCw, rotateCcw, pause, build
+  moveDown, moveLeft, moveRight, rotateCw, rotateCcw, pause, tick, build
 };

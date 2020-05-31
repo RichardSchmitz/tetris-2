@@ -1,7 +1,7 @@
 import {randomTetromino, topmostCoord, bottommostCoord, leftmostCoord, rightmostCoord} from './tetromino';
 import {TetrisState} from './state';
 import {Scorable} from './scoring';
-import Coord from './coord';
+import { Coord } from './coord';
 import * as matrixUtil from './matrix';
 
 export class TetrisEngine {
