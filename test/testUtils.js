@@ -1,7 +1,7 @@
 import { TetrisEngine } from '../src/engine';
 import { createT, randomId, createZ, createS, createL, createJ, createO, createI } from '../src/tetromino';
 import { moveDown, moveLeft, moveRight, rotateCw, rotateCcw, pause, tick } from '../src/action';
-import { createMatrix } from '../src/matrix';
+import { createMatrix, fillMatrix } from '../src/matrix';
 import { TetrisState } from '../src/state';
 import { PixelTetromino } from '../src/tetromino/p';
 import { Coord, leftmost, bottommost, topmost, rightmost } from '../src/coord';
@@ -10,9 +10,13 @@ import { TBlock } from '../src/tetromino/t';
 const fs = require('fs');
 const path = require('path');
 
+const BLANK = '_';
+
 export class TestScenarioValidator {
   constructor(engine, actions, expectedState) {
-    // todo
+    this.engine = engine;
+    this.actions = actions;
+    this.expectedState = expectedState;
   }
 
   execute() {
@@ -45,6 +49,8 @@ function buildEngine(scenario) {
   engine._state = buildState(scenario.initial);
   engine._state.next = engine._nextTetromino();
 
+  engine.addListener(state => console.log(serializeState(state)));
+
   return engine;
 }
 
@@ -61,8 +67,7 @@ function buildState(grid) {
     for (let j = 0; j < grid[0].length; j++) {
       const letter = grid[i][j];
 
-      if (letter === 'O') {
-        // Represents an empty space
+      if (letter === BLANK) {
         continue;
       } 
 
@@ -85,7 +90,7 @@ function buildState(grid) {
     throw new Error(`Expected to find exactly 1 active piece,` +
     ` but found ${activeMap.size} of types ${Array.from(activeMap.keys())}`)
   }
-  
+
   const type = activeMap.keys().next().value;
   const coords = activeMap.get(type);
   state.active = createPieceFromLetterAndCoords(type, coords);
@@ -348,4 +353,26 @@ function createActionFromLetter(letter) {
   } else if (letter === 'T') {
     return tick();
   }
+}
+
+function serializeState(state) {
+  const m = createMatrix(state.width(), state.height());
+  fillMatrix(m, state.stack.concat([state.active]));
+
+    const rows = [];
+    for (let j = 0; j < state.height(); j++) {
+      const row = [];
+      for (let i = 0; i < state.width(); i++) {
+        const piece = m[i][j];
+
+        if (piece === null) {
+          row.push(BLANK);
+        } else {
+          row.push(m[i][j].type);
+        }
+      }
+      rows.push(row.join(''));
+    }
+
+    return rows.join('\n');
 }

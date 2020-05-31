@@ -14,7 +14,7 @@ function createP(id) {
 // A test tetromino that represents a single pixel (for simplicity)
 class PixelTetromino extends Tetromino {
   constructor(id, coord) {
-    super(id, [coord], 'P');
+    super(id, [coord], 'X');
     this.rotation = 0;
   }
 
