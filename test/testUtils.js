@@ -85,7 +85,8 @@ function buildState(grid) {
     throw new Error(`Expected to find exactly 1 active piece,` +
     ` but found ${activeMap.size} of types ${Array.from(activeMap.keys())}`)
   }
-  const type = activeMap.keys().next()
+  
+  const type = activeMap.keys().next().value;
   const coords = activeMap.get(type);
   state.active = createPieceFromLetterAndCoords(type, coords);
 
@@ -325,8 +326,8 @@ function assertUniqueCoords(coords) {
   const coordSet = new Set();
   coords.forEach(c => coordSet.add(`x${c.x}y${c.y}`));
 
-  if (coords.size != coordSet.size) {
-    throw new Error(`${coords.size - coordSet.size} coords are` +
+  if (coords.length != coordSet.size) {
+    throw new Error(`${coords.length - coordSet.size} coords are` +
       ` not unique: ${JSON.stringify(coords)}`)
   }
 }
