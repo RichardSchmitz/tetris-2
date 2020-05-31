@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { TetrisEngine } from '../src/engine';
 import { createT, randomId, createZ, createS, createL, createJ, createO, createI } from '../src/tetromino';
 import { moveDown, moveLeft, moveRight, rotateCw, rotateCcw, pause, tick } from '../src/action';
@@ -20,11 +21,14 @@ export class TestScenarioValidator {
   }
 
   execute() {
-    // todo
+    this.actions.forEach(a => a.execute(this.engine));
   }
 
   validate() {
-    // todo
+    const expectedStr = serializeState(this.expectedState);
+    const actualStr = serializeState(this.engine._state);
+
+    assert.equal(actualStr, expectedStr);
   }
 }
 
@@ -49,7 +53,7 @@ function buildEngine(scenario) {
   engine._state = buildState(scenario.initial);
   engine._state.next = engine._nextTetromino();
 
-  engine.addListener(state => console.log(serializeState(state)));
+  engine.addListener({notify: state => console.log(serializeState(state))});
 
   return engine;
 }
@@ -101,7 +105,6 @@ function buildState(grid) {
 }
 
 function parseTestScenario(contents) {
-  console.log(contents);
   // This only works for newline-style breaks (notably, not \r)
   let grid = {width: null, height: null}
   let pieces = [];
@@ -390,5 +393,5 @@ function serializeState(state) {
       rows.push(row.join(''));
     }
 
-    return rows.join('\n');
+    return '\n' + rows.join('\n');
 }
