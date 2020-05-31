@@ -260,24 +260,25 @@ function determineRotationT(coords) {
   assertUniqueCoords(coords);
 
   if (bottommost(coords).y - topmost(coords).y === 1) {
-    // rot 0 or 2
-    if (rightmost(coords).x - leftmost(coords).x === 1) {
-      // rot 0 or 2
+    if (rightmost(coords).y - topmost(coords).y === 1) {
+      return 2;
     } else {
-
+      return 0;
     }
   } else {
-    // rot 1 or 3
+    if (rightmost(coords).x - topmost(coords).x === 1) {
+      return 3;
+    } else {
+      return 1;
+    }
   }
-
-  return 1;
 }
 
 function determineRotationZ(coords) {
   assertSize(coords);
   assertUniqueCoords(coords);
 
-  if (bottommost(coords).x - topmost(coords).x === 1) {
+  if (bottommost(coords).y - topmost(coords).y === 1) {
     return 0;
   }
 
@@ -288,7 +289,7 @@ function determineRotationS(coords) {
   assertSize(coords);
   assertUniqueCoords(coords);
 
-  if (bottommost(coords).x - topmost(coords).x === 1) {
+  if (bottommost(coords).y - topmost(coords).y === 1) {
     return 0;
   }
 
@@ -296,11 +297,26 @@ function determineRotationS(coords) {
 }
 
 function determineRotationL(coords) {
-  
+  assertSize(coords);
+  assertUniqueCoords(coords);
+  // todo: how to determine this?
+  if (bottommost(coords).y - topmost(coords).y === 1) {
+    if (bottommost(coords).y - rightmost(coords).y === 1) { // this isn't right
+      return 1;
+    } else {
+      return 3;
+    }
+  } else {
+    if (bottommost(coords).x - rightmost(coords).x === 1) {
+      return 0;
+    } else {
+      return 2;
+    }
+  }
 }
 
 function determineRotationJ(coords) {
-  
+    // todo: how to determine this?
 }
 
 function determineRotationO(coords) {

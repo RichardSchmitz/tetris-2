@@ -7,7 +7,7 @@ describe('Pixel Tetromino', function () {
     let piece = createP('foo');
 
     assert.equal('foo', piece.id);
-    assert.equal('P', piece.type);
+    assert.equal('X', piece.type);
     assert.equal(0, piece.rotation);
     
     assert.deepEqual(
@@ -21,7 +21,7 @@ describe('Pixel Tetromino', function () {
     let translated = piece.translateRight();
 
     assert.equal('foo', translated.id);
-    assert.equal('P', translated.type);
+    assert.equal('X', translated.type);
     assert.equal(0, translated.rotation);
     
     assert.deepEqual(
@@ -35,7 +35,7 @@ describe('Pixel Tetromino', function () {
     let translated = piece.translateLeft();
 
     assert.equal('foo', translated.id);
-    assert.equal('P', translated.type);
+    assert.equal('X', translated.type);
     assert.equal(0, translated.rotation);
     
     assert.deepEqual(
@@ -49,7 +49,7 @@ describe('Pixel Tetromino', function () {
     let translated = piece.translateUp();
 
     assert.equal('foo', translated.id);
-    assert.equal('P', translated.type);
+    assert.equal('X', translated.type);
     assert.equal(0, translated.rotation);
     
     assert.deepEqual(
@@ -63,7 +63,7 @@ describe('Pixel Tetromino', function () {
     let translated = piece.translateDown();
 
     assert.equal('foo', translated.id);
-    assert.equal('P', translated.type);
+    assert.equal('X', translated.type);
     assert.equal(0, translated.rotation);
     
     assert.deepEqual(
@@ -77,7 +77,7 @@ describe('Pixel Tetromino', function () {
     let rotated = piece.rotateCw();
 
     assert.equal('foo', rotated.id);
-    assert.equal('P', rotated.type);
+    assert.equal('X', rotated.type);
     assert.equal(0, rotated.rotation);
     
     assert.deepEqual(
@@ -91,7 +91,7 @@ describe('Pixel Tetromino', function () {
     let rotated = piece.rotateCcw();
 
     assert.equal('foo', rotated.id);
-    assert.equal('P', rotated.type);
+    assert.equal('X', rotated.type);
     assert.equal(0, rotated.rotation);
     
     assert.deepEqual(
