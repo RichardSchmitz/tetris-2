@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {createJ} from './j';
+import { createJ, determineRotation } from './j';
 import { Coord } from '../coord';
 
 describe('J Tetromino', function() {
@@ -182,5 +182,50 @@ describe('J Tetromino', function() {
     assert.deepEqual(
       [new Coord(0, 2), new Coord(1, 0), new Coord(1, 1), new Coord(1, 2)],
       rotated.coords);
+  });
+
+  it('Determine rotation for position 0', function() {
+    const coords = [
+      new Coord(1, 0),
+      new Coord(1, 1),
+      new Coord(1, 2),
+      new Coord(0, 2)
+    ];
+
+    const rotation = determineRotation(coords);
+    assert.equal(rotation, 0);
+  });
+
+  it('Determine rotation for position 1', function() {
+    const coords = [
+      new Coord(0, 0),
+      new Coord(0, 1),
+      new Coord(1, 1),
+      new Coord(2, 1)
+    ];
+
+    assert.equal(determineRotation(coords), 1);
+  });
+
+  it('Determine rotation for position 2', function() {
+    const coords = [
+      new Coord(2, 0),
+      new Coord(1, 0),
+      new Coord(1, 1),
+      new Coord(1, 2)
+    ];
+
+    assert.equal(determineRotation(coords), 2);
+  });
+
+  it('Determine rotation for position 3', function() {
+    const coords = [
+      new Coord(0, 1),
+      new Coord(1, 1),
+      new Coord(2, 1),
+      new Coord(2, 2)
+    ];
+
+    assert.equal(determineRotation(coords), 3);
   });
 });

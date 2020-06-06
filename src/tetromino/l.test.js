@@ -199,7 +199,7 @@ describe('L Tetromino', function() {
 
   it('Determine rotation for position 1', function() {
     const coords = [
-      new Coord(0, 0),
+      new Coord(0, 2),
       new Coord(0, 1),
       new Coord(1, 1),
       new Coord(2, 1)
@@ -224,7 +224,7 @@ describe('L Tetromino', function() {
       new Coord(0, 1),
       new Coord(1, 1),
       new Coord(2, 1),
-      new Coord(2, 2)
+      new Coord(2, 0)
     ];
 
     assert.equal(determineRotation(coords), 3);

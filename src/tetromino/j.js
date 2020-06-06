@@ -1,7 +1,7 @@
-import {Tetromino, leftmostCoord, topmostCoord, deconstructMatrix} from './tetromino';
-import { Coord } from '../coord';
+import { Tetromino, leftmostCoord, topmostCoord, deconstructMatrix, validateCoords } from './tetromino';
+import { Coord, bottommost, topmost, groupCoordsByDimension } from '../coord';
 
-export { createJ, ROTATIONS };
+export { createJ, determineRotation, ROTATIONS };
 
 const MATRIX_ROT_0 = [[0, 0, 1], [1, 1, 1], [0, 0, 0]];
 const MATRIX_ROT_1 = [[1, 1, 0], [0, 1, 0], [0, 1, 0]];
@@ -45,5 +45,27 @@ class JBlock extends Tetromino {
 
   createBlock(coords, rotation) {
     return new JBlock(this.id, coords, rotation);
+  }
+}
+
+function determineRotation(coords) {
+  validateCoords(coords);
+
+  if (bottommost(coords).y - topmost(coords).y === 1) {
+    // Find the x-value with 2 coords
+    const coordsByXValue = groupCoordsByDimension(coords, c => c.x);
+    if (coordsByXValue[0].length === 2) {
+      return 1;
+    } else {
+      return 3;
+    }
+  } else {
+    // Find the y-value with 2 coords
+    const coordsByYValue = groupCoordsByDimension(coords, c => c.y);
+    if (coordsByYValue[0].length === 2) {
+      return 2;
+    } else {
+      return 0;
+    }
   }
 }
