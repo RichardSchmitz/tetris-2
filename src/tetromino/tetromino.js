@@ -1,6 +1,6 @@
 import * as coord from '../coord';
 
-export {Tetromino, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord, deconstructMatrix, validateCoords};
+export { Tetromino, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord, deconstructMatrix, validateCoords };
 
 class Tetromino {
   constructor(id, coords, type) {

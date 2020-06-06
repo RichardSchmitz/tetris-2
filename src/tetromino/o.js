@@ -1,31 +1,31 @@
-import {Tetromino, leftmostCoord, topmostCoord, deconstructMatrix} from './tetromino';
-import { Coord } from '../coord';
+import * as tetromino from './tetromino';
+import * as coord from '../coord';
 
-export { createO, ROTATIONS };
+export { createO, determineRotation, ROTATIONS };
 
 const MATRIX_ROT_0 = [[1, 1], [1, 1]];
 
 const ROTATIONS = [MATRIX_ROT_0];
 
 function createO(id) {
-  const origin = new Coord(0, 0);
+  const origin = new coord.Coord(0, 0);
   const matrix = MATRIX_ROT_0;
-  const coords = deconstructMatrix(matrix, origin);
+  const coords = tetromino.deconstructMatrix(matrix, origin);
 
   return new OBlock(id, coords);
 }
 
-class OBlock extends Tetromino {
+class OBlock extends tetromino.Tetromino {
   constructor(id, coords) {
     super(id, coords, 'O');
     this.rotation = 0;
   }
 
   getOriginForRotation(rotation) {
-    const xMin = leftmostCoord(this).x;
-    const yMin = topmostCoord(this).y;
+    const xMin = tetromino.leftmostCoord(this).x;
+    const yMin = tetromino.topmostCoord(this).y;
 
-    return new Coord(xMin, yMin);
+    return new coord.Coord(xMin, yMin);
   }
 
    getRotations() {
@@ -35,4 +35,10 @@ class OBlock extends Tetromino {
   createBlock(coords, rotation) {
     return new OBlock(this.id, coords);
   }
+}
+
+function determineRotation(coords) {
+  tetromino.validateCoords(coords);
+
+  return 0; // only rotation for OBlock
 }

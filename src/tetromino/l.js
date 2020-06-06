@@ -1,5 +1,5 @@
-import {Tetromino, leftmostCoord, topmostCoord, deconstructMatrix, validateCoords} from './tetromino';
-import { Coord, bottommost, topmost, groupCoordsByDimension } from '../coord';
+import * as tetromino from './tetromino';
+import * as coord from '../coord';
 
 export { createL, determineRotation, ROTATIONS };
 
@@ -11,14 +11,14 @@ const MATRIX_ROT_3 = [[0, 1, 0], [0, 1, 0], [1, 1, 0]];
 const ROTATIONS = [MATRIX_ROT_0, MATRIX_ROT_1, MATRIX_ROT_2, MATRIX_ROT_3];
 
 function createL(id) {
-  const origin = new Coord(0, 0);
+  const origin = new coord.Coord(0, 0);
   const matrix = MATRIX_ROT_2;
-  const coords = deconstructMatrix(matrix, origin);
+  const coords = tetromino.deconstructMatrix(matrix, origin);
 
   return new LBlock(id, coords, 2);
 }
 
-class LBlock extends Tetromino {
+class LBlock extends tetromino.Tetromino {
   constructor(id, coords, rotation) {
     super(id, coords, 'L');
     this.rotation = rotation % 4;
@@ -27,15 +27,15 @@ class LBlock extends Tetromino {
   getOriginForRotation(rotation) {
     rotation = rotation % 4;
 
-    const xMin = leftmostCoord(this).x;
-    const yMin = topmostCoord(this).y;
+    const xMin = tetromino.leftmostCoord(this).x;
+    const yMin = tetromino.topmostCoord(this).y;
 
     if (this.rotation === 0) {
-      return new Coord(xMin - 1, yMin);
+      return new coord.Coord(xMin - 1, yMin);
     } else if (this.rotation === 1) {
-      return new Coord(xMin, yMin - 1);
+      return new coord.Coord(xMin, yMin - 1);
     } else {
-      return new Coord(xMin, yMin);
+      return new coord.Coord(xMin, yMin);
     }
   }
 
@@ -49,11 +49,11 @@ class LBlock extends Tetromino {
 }
 
 function determineRotation(coords) {
-  validateCoords(coords);
+  tetromino.validateCoords(coords);
 
-  if (bottommost(coords).y - topmost(coords).y === 1) {
+  if (coord.bottommost(coords).y - coord.topmost(coords).y === 1) {
     // Find the x-value with 2 coords
-    const coordsByXValue = groupCoordsByDimension(coords, c => c.x);
+    const coordsByXValue = coord.groupCoordsByDimension(coords, c => c.x);
     if (coordsByXValue[0].length === 2) {
       return 1;
     } else {
@@ -61,7 +61,7 @@ function determineRotation(coords) {
     }
   } else {
     // Find the y-value with 2 coords
-    const coordsByYValue = groupCoordsByDimension(coords, c => c.y);
+    const coordsByYValue = coord.groupCoordsByDimension(coords, c => c.y);
     if (coordsByYValue[0].length === 2) {
       return 2;
     } else {
