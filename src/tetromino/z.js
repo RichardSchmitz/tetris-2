@@ -39,7 +39,7 @@ class ZBlock extends tetromino.Tetromino {
 }
 
 function determineRotation(coords) {
-  validateCoords(coords);
+  tetromino.validateCoords(coords);
 
   if (coord.bottommost(coords).y - coord.topmost(coords).y === 1) {
     return 0;

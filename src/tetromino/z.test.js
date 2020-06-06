@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {createZ} from './z';
+import { createZ, determineRotation } from './z';
 import { Coord } from '../coord';
 
 describe('Z Tetromino', function() {
@@ -127,5 +127,28 @@ describe('Z Tetromino', function() {
     assert.deepEqual(
       [new Coord(0, 0), new Coord(1, 0), new Coord(1, 1), new Coord(2, 1)],
       rotated.coords);
+  });
+
+  it('Determine rotation for position 0', function() {
+    const coords = [
+      new Coord(0, 0),
+      new Coord(1, 0),
+      new Coord(1, 1),
+      new Coord(2, 1)
+    ];
+
+    const rotation = determineRotation(coords);
+    assert.equal(rotation, 0);
+  });
+
+  it('Determine rotation for position 1', function() {
+    const coords = [
+      new Coord(1, 0),
+      new Coord(1, 1),
+      new Coord(2, 1),
+      new Coord(2, 2)
+    ];
+
+    assert.equal(determineRotation(coords), 1);
   });
 });

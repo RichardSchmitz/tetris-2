@@ -46,7 +46,10 @@ class IBlock extends tetromino.Tetromino {
 function determineRotation(coords) {
   tetromino.validateCoords(coords);
 
-  if (coord.bottommost(coords).x - coord.topmost(coords).x === 0) {
+  const bottom = coord.bottommost(coords);
+  const top = coord.topmost(coords);
+
+  if (bottom.y === top.y) {
     return 1;
   }
 
