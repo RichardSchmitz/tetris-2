@@ -1,9 +1,10 @@
-import {TetrisEngine} from './engine';
-import {ModernScoringSystem} from './scoring';
-import {GameBoard, Preview} from './display.js';
-import {LevelDashboard, ScoreDashboard} from "./dashboard";
-import Keyboard from './controls';
+import { TetrisEngine } from './engine';
+import { ModernScoringSystem } from './scoring';
+import { GameBoard, Preview } from './display.js';
+import { LevelDashboard, ScoreDashboard } from "./dashboard";
+import { Keyboard } from './controls';
 import './style.css';
+import { MonitorListener } from './monitor';
 
 const engine = new TetrisEngine(9, 10);
 const controls = new Keyboard(engine);
@@ -19,9 +20,10 @@ engine.addListener(level);
 const score = new ScoreDashboard('score', document);
 engine.addListener(score);
 
+const monitor = new MonitorListener(window, () => engine.handleTick());
+engine.addListener(monitor);
+
 engine.init();
 engine.start();
 
 document.addEventListener('keydown', e => controls.handleEvent(e));
-
-// window.setInterval(() => board.handleTick(), 1000);

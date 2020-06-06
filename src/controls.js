@@ -9,7 +9,7 @@ const ROTATE_CW = 39; // right arrow
 const ROTATE_CCW = 37; // left arrow
 const PAUSE = 80;
 
-export default class Keyboard {
+export class Keyboard {
   constructor(engine) {
     this.engine = engine;
   }
