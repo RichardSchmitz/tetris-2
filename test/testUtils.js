@@ -299,21 +299,34 @@ function determineRotationS(coords) {
   return 1;
 }
 
+// todo: move these functions into their respective tetromino files for testing?
 function determineRotationL(coords) {
   assertSize(coords);
   assertUniqueCoords(coords);
-  // todo: how to determine this?
+  // todo: is this right? Should write a test - see l.test.js
   if (bottommost(coords).y - topmost(coords).y === 1) {
-    if (bottommost(coords).y - rightmost(coords).y === 1) { // this isn't right
+    // Group coords by x-value
+    let xBuckets = new Map();
+    coords.map(c => c.x).forEach(x => xBuckets.set(x, []));
+    xBuckets = coords.reduce((buckets, coord) => buckets.get(coord.x).push(coord), xBuckets);
+    // Find the x-value with 2 coords
+    const sortedEntries = Array.from(xBuckets.entries()).sort(e1, e2 => e1[0] - e2[0])
+    if (sortedEntries[0].length === 2) {
       return 1;
     } else {
       return 3;
     }
   } else {
-    if (bottommost(coords).x - rightmost(coords).x === 1) {
-      return 0;
-    } else {
+    // Group coords by y-value
+    let yBuckets = new Map();
+    coords.map(c => c.y).forEach(y => yBuckets.set(y, []));
+    yBuckets = coords.reduce((buckets, coord) => buckets.get(coord.y).push(coord), yBuckets);
+    // Find the y-value with 2 coords
+    const sortedEntries = Array.from(yBuckets.entries()).sort(e1, e2 => e1[0] - e2[0])
+    if (sortedEntries[0].length === 2) {
       return 2;
+    } else {
+      return 0;
     }
   }
 }

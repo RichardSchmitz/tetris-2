@@ -1,6 +1,6 @@
 import * as coord from '../coord';
 
-export {Tetromino, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord, deconstructMatrix};
+export {Tetromino, leftmostCoord, rightmostCoord, topmostCoord, bottommostCoord, deconstructMatrix, validateCoords};
 
 class Tetromino {
   constructor(id, coords, type) {
@@ -84,3 +84,17 @@ function bottommostCoord(piece) {
   return coord.bottommost(piece.coords);
 }
 
+function validateCoords(coords) {
+  // A valid tetromino has exactly 4 unique coords
+  if (coords.length != 4) {
+    throw new Error(`Expected 4 coordinates but found ${coords.length}`);
+  }
+
+  const coordSet = new Set();
+  coords.forEach(c => coordSet.add(`x${c.x}y${c.y}`));
+
+  if (coords.length != coordSet.size) {
+    throw new Error(`${coords.length - coordSet.size} coords are` +
+      ` not unique: ${JSON.stringify(coords)}`)
+  }
+}
