@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+    commands:
+      - apt-get update -y
+  pre_build:
+    commands:
+      - echo Nothing to do in the pre_build phase...
+  build:
+    commands:
+      - echo Build started on `date`
+      - npm install
+      - npm build
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - ARTIFACT_BASENAME=$(echo $CODEBUILD_BUILD_ID | cut -d ':' -f 1)
+      - SEMANTIC_VERSION=$(npm run --silent version)
+      - ARTIFACT_NAME="$ARTIFACT_BASENAME-$SEMANTIC_VERSION.$CODEBUILD_SOURCE_VERSION.zip"
+      - echo "Packacking artifact '$ARTIFACT_NAME'"
+artifacts:
+  files:
+    - '**/*'
+  name: "$ARTIFACT_NAME"
+  base-directory: dist
