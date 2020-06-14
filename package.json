@@ -7,7 +7,8 @@
     "build": "webpack --config webpack.prod.js",
     "start": "webpack-dev-server --open --config webpack.dev.js",
     "test": "nyc --reporter=html --reporter=text mocha --require @babel/register src/*.test.js src/**/*.test.js",
-    "testOnly": "mocha --require @babel/register"
+    "testOnly": "mocha --require @babel/register",
+    "version": "echo $npm_package_version"
   },
   "keywords": [],
   "author": "",
