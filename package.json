@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "konva": "^3.4.1",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
